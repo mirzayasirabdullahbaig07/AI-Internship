@@ -1,0 +1,52 @@
+diff --git a/src/components/LoginForm.test.tsx b/src/components/LoginForm.test.tsx
+new file mode 100644
+index 0000000..f2bb7d7
+--- /dev/null
++++ b/src/components/LoginForm.test.tsx
+@@ -0,0 +1,14 @@
++import { render, screen, fireEvent } from "@testing-library/react";
++import LoginForm from "./LoginForm";
++
++test("shows red inline error when email lacks '@'", () => {
++  render(<LoginForm />);
++  fireEvent.change(screen.getByLabelText(/email/i), {
++    target: { value: "bademail" },
++  });
++  fireEvent.click(screen.getByRole("button", { name: /log in/i }));
++
++  const error = screen.getByRole("alert");
++  expect(error).toBeInTheDocument();
++  expect(error).toHaveStyle("color: rgb(255, 0, 0)");
++});
+diff --git a/src/components/LoginForm.tsx b/src/components/LoginForm.tsx
+index c319c2d..6599755 100644
+--- a/src/components/LoginForm.tsx
++++ b/src/components/LoginForm.tsx
+@@ -2,9 +2,15 @@ import { useState } from "react";
+ 
+ export default function LoginForm() {
+   const [email, setEmail] = useState("");
++  const [error, setError] = useState("");
+ 
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
++    if (!email.includes("@")) {
++      setError("Please enter a valid email address.");
++      return; // blocks submission
++    }
++    setError("");
+     // ...existing submit logic stays untouched
+   };
+ 
+@@ -16,6 +22,11 @@ export default function LoginForm() {
+         onChange={(e) => setEmail(e.target.value)}
+         aria-label="Email"
+       />
++      {error && (
++        <p role="alert" style={{ color: "red" }}>
++          {error}
++        </p>
++      )}
+       <button type="submit">Log in</button>
+     </form>
+   );
