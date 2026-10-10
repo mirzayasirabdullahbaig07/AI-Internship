@@ -1,0 +1,36 @@
+PASS day-05-password-strength/passwordStrength.test.tsx
+  evaluatePassword
+    ✓ empty string (3 ms)
+    ✓ short passwords are 'Too short'
+    ✓ common password is capped at Weak
+    ✓ single repeated character is Weak
+    ✓ long mixed password is Strong (1 ms)
+    ✓ longer is not worse: passphrase beats short complex (1 ms)
+    ✓ 10,000-char paste is truncated, flagged, and fast (1 ms)
+    ✓ emoji / unicode do not throw (1 ms)
+    ✓ spaces count as symbols (passphrase friendly)
+  <PasswordStrengthMeter />
+    ✓ updates the meter and live text as the user types (83 ms)
+    ✓ pasting 10,000 chars does not crash the component (10 ms)
+PASS day-04-api-retry/fetchWithRetry.test.ts
+  ✓ recovers after 2 simulated network drops (3rd attempt succeeds) (51 ms)
+  ✓ sends the Authorization bearer header (15 ms)
+  ✓ retries 5xx then succeeds (8 ms)
+  ✓ 401 is NOT retried and surfaces 'Auth required' (3 ms)
+  ✓ gives up after retries are exhausted (1 + 2 attempts) on persistent 500 (32 ms)
+  ✓ gives up on persistent network drops (41 ms)
+  ✓ 200 with an invalid JSON body is NOT retried (retrying cannot fix a bad body) (7 ms)
+PASS day-03-typed-tasks/tasks.test.ts
+  loadTasks - the four UI states
+    ✓ starts in loading (1 ms)
+    ✓ success: returns the tasks (5 ms)
+    ✓ empty: request succeeded but 0 records (9 ms)
+    ✓ error: network failure is captured, not thrown (2 ms)
+    ✓ error: non-Error throw still produces a safe message (1 ms)
+  null vs undefined vs []
+    ✓ they are three different realities (1 ms)
+Test Suites: 3 passed, 3 total
+Tests:       24 passed, 24 total
+Snapshots:   0 total
+Time:        1.902 s
+Ran all test suites.

@@ -1,0 +1,8 @@
+Run npm test
+FAIL src/components/LoginForm.test.tsx
+  x shows red inline error when email lacks '@' (14 ms)
+    expect(element).toHaveStyle()
+    - Expected  color: red
+    + Received  (no style)
+Tests: 1 failed, 11 passed, 12 total
+Error: Process completed with exit code 1.

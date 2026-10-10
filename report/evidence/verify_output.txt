@@ -1,0 +1,20 @@
+$ npm run verify
+> ai-internship@1.0.0 verify
+> npm run format:check && npm run typecheck && npm test
+> ai-internship@1.0.0 format:check
+> prettier --check .
+Checking formatting...
+All matched files use Prettier code style!
+> ai-internship@1.0.0 typecheck
+> tsc --noEmit
+> ai-internship@1.0.0 test
+> jest
+PASS day-05-password-strength/passwordStrength.test.tsx
+PASS day-04-api-retry/fetchWithRetry.test.ts
+PASS day-03-typed-tasks/tasks.test.ts
+Test Suites: 3 passed, 3 total
+Tests:       24 passed, 24 total
+Snapshots:   0 total
+Time:        1.496 s, estimated 2 s
+Ran all test suites.
+exit code: 0
