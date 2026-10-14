@@ -1,0 +1,5 @@
+step 1 PASS: tab order = Leave type -> Start date -> End date -> Reason -> Submit request
+step 2 PASS: empty submit -> 4 problems announced, focus on the summary
+step 3-4 PASS: typed every field, Enter submitted, banner focused, request listed as Pending, form cleared
+step 5 PASS: overlapping approved leave is refused with the clashing dates named
+step 6 PASS: no horizontal overflow at 320px

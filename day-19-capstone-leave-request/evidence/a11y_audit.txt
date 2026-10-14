@@ -1,0 +1,10 @@
+[loading] axe rules passed: 34, violations: 0
+[loaded_list] axe rules passed: 31, violations: 0
+[empty] axe rules passed: 29, violations: 0
+[load_error] axe rules passed: 33, violations: 0
+[validation_errors] axe rules passed: 37, violations: 0
+[submit_success] axe rules passed: 35, violations: 0
+[submit_error] axe rules passed: 36, violations: 0
+[negative control] deliberately broken page -> 5 violations detected: button-name, color-contrast, image-alt, label, page-has-heading-one -> harness OK
+
+TOTAL violations across 7 states: 0

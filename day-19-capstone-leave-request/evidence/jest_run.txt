@@ -1,0 +1,60 @@
+$ npx jest day-19 --verbose
+PASS day-19-capstone-leave-request/tests/LeaveRequestForm.regression.test.tsx
+  ✓ a server-side overlap error clears when either date is corrected, not only the one it is attached to (212 ms)
+  ✓ after "Try again" focus moves to the My requests heading instead of falling to the page body (101 ms)
+PASS day-19-capstone-leave-request/tests/LeaveRequestForm.test.tsx
+  ✓ an invalid submission is announced and focused; the corrected one is submitted, confirmed and listed (194 ms)
+PASS day-19-capstone-leave-request/tests/validateLeaveRequest.test.ts
+  date helpers
+    ✓ isValidISODate(2026-11-10) = true (1 ms)
+    ✓ isValidISODate(2028-02-29) = true
+    ✓ isValidISODate(2026-02-29) = false (1 ms)
+    ✓ isValidISODate(2026-13-01) = false (2 ms)
+    ✓ isValidISODate(2026-00-10) = false
+    ✓ isValidISODate(2026-04-31) = false (1 ms)
+    ✓ isValidISODate(26-11-10) = false
+    ✓ isValidISODate(2026-1-5) = false (1 ms)
+    ✓ isValidISODate() = false
+    ✓ isValidISODate(not a date) = false
+    ✓ daysInclusive counts both ends, across months and leap days (6 ms)
+    ✓ overlaps is inclusive: touching ranges overlap, adjacent days do not (1 ms)
+  validateLeaveRequest
+    ✓ a valid request has no errors (1 ms)
+    ✓ an empty form reports every field once (2 ms)
+    ✓ an unknown leave type string is treated as not chosen (1 ms)
+    dates
+      ✓ start in the past is rejected, today is allowed
+      ✓ end before start is rejected; same day is allowed (1 day) (1 ms)
+      ✓ 30 days is allowed, 31 is rejected with the real number
+      ✓ non-existent dates are rejected, not silently rolled over (1 ms)
+      ✓ leap day 2028-02-29 is accepted (1 ms)
+      ✓ an invalid start date does not also produce a confusing end-date error (1 ms)
+    overlap with approved leave
+      ✓ overlapping approved leave is rejected and names the clashing dates
+      ✓ touching the last approved day is an overlap; the next day is fine (2 ms)
+      ✓ a request that fully contains approved leave is an overlap
+      ✓ pending and rejected requests do not block (1 ms)
+      ✓ another employee's approved leave does not block
+    reason
+      ✓ empty and whitespace-only are rejected as empty (3 ms)
+      ✓ too short reports how many characters were given (trimmed) (5 ms)
+      ✓ 10 characters is allowed; 9 is not (1 ms)
+      ✓ 500 characters is allowed; 501 is not (3 ms)
+      ✓ emoji count as one character each (code points, not UTF-16 units)
+PASS day-19-capstone-leave-request/tests/leaveApi.test.ts
+  fake leave API (typed, local, FAKE data)
+    ✓ lists only the signed-in employee's requests (other employees' leave is never returned) (6 ms)
+    ✓ empty scenario returns no requests
+    ✓ error scenario fails the first load and succeeds on retry (55 ms)
+    ✓ a valid submission is stored as pending and appears in the next list (15 ms)
+    ✓ another employee's approved leave on the same dates does not block Sana (16 ms)
+    ✓ the SERVER re-validates: an invalid request is rejected even if the client skipped its checks (2 ms)
+    ✓ the server also rejects overlap with the employee's approved leave (16 ms)
+    ✓ submit-error scenario fails once, then works; nothing was saved by the failure (6 ms)
+    ✓ ids are unique and returned objects are copies (mutating them cannot corrupt the store) (5 ms)
+    ✓ todayISO uses the LOCAL calendar date, zero-padded (3 ms)
+Test Suites: 4 passed, 4 total
+Tests:       44 passed, 44 total
+Snapshots:   0 total
+Time:        4.204 s
+Ran all test suites matching day-19.
