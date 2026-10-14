@@ -1,0 +1,6 @@
+Run docker compose up -d db
+Pulling db (postgres:16)...
+Error response from daemon: toomanyrequests: You have reached your pull rate limit.
+You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit
+Error: Process completed with exit code 1.
+Steps executed after this point: 0. Test suite: NOT RUN.

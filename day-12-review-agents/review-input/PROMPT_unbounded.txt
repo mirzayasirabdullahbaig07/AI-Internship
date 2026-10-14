@@ -1,0 +1,196 @@
+Can you take a look at this code and tell me what you think?
+
+diff --git a/day-11-task-agent/LoginForm.tsx b/day-11-task-agent/LoginForm.tsx
+index 6599755..e307bcf 100644
+--- a/day-11-task-agent/LoginForm.tsx
++++ b/day-11-task-agent/LoginForm.tsx
+@@ -1,17 +1,28 @@
+ import { useState } from "react";
+ 
+-export default function LoginForm() {
++interface LoginFormProps {
++  userId?: string;
++  token?: string;
++}
++
++export default function LoginForm({ userId = "1", token = "" }: LoginFormProps) {
+   const [email, setEmail] = useState("");
+   const [error, setError] = useState("");
++  const [signedInAs, setSignedInAs] = useState<string | null>(null);
+ 
+-  const handleSubmit = (e: React.FormEvent) => {
++  const handleSubmit = async (e: React.FormEvent) => {
+     e.preventDefault();
+     if (!email.includes("@")) {
+       setError("Please enter a valid email address.");
+       return; // blocks submission
+     }
+     setError("");
+-    // ...existing submit logic stays untouched
++    // PR #104: load the profile after login
++    const res = await fetch(`/api/profile?userId=${userId}`, {
++      headers: { Authorization: `Bearer ${token}` },
++    });
++    const rows = await res.json();
++    setSignedInAs(rows[0]?.name ?? null);
+   };
+ 
+   return (
+@@ -27,6 +38,7 @@ export default function LoginForm() {
+           {error}
+         </p>
+       )}
++      {signedInAs && <p>Signed in as {signedInAs}</p>}
+       <button type="submit">Log in</button>
+     </form>
+   );
+diff --git a/day-12-review-agents/src/auth.js b/day-12-review-agents/src/auth.js
+new file mode 100644
+index 0000000..450b030
+--- /dev/null
++++ b/day-12-review-agents/src/auth.js
+@@ -0,0 +1,15 @@
++/** Lab-only session store: bearer token -> user id. Map (not a plain object) so "__proto__" is not a valid key. */
++const SESSIONS = new Map([
++  ["token-yasir", 1],
++  ["token-ayesha", 2],
++  ["token-admin", 3],
++]);
++
++/** Returns the authenticated user id from the Authorization header, or null. */
++function authenticate(req) {
++  const match = /^Bearer (.+)$/.exec(req.headers.authorization || "");
++  if (!match) return null;
++  return SESSIONS.get(match[1]) ?? null;
++}
++
++module.exports = { authenticate, SESSIONS };
+diff --git a/day-12-review-agents/src/db.js b/day-12-review-agents/src/db.js
+new file mode 100644
+index 0000000..d955adb
+--- /dev/null
++++ b/day-12-review-agents/src/db.js
+@@ -0,0 +1,44 @@
++const { DatabaseSync } = require("node:sqlite");
++
++/** In-memory database seeded with FAKE lab data only (no real credentials). */
++function createDb() {
++  const db = new DatabaseSync(":memory:");
++  db.exec(`CREATE TABLE users (
++    id INTEGER PRIMARY KEY,
++    name TEXT NOT NULL,
++    email TEXT NOT NULL,
++    role TEXT NOT NULL DEFAULT 'user',
++    password_hash TEXT NOT NULL,
++    api_key TEXT NOT NULL
++  )`);
++  const insert = db.prepare(
++    "INSERT INTO users (id, name, email, role, password_hash, api_key) VALUES (?, ?, ?, ?, ?, ?)",
++  );
++  insert.run(
++    1,
++    "Mirza Yasir Abdullah Baig",
++    "mirzayasirabdullahbaig07@users.noreply.github.com",
++    "user",
++    "$2b$10$FAKE-HASH-FOR-LAB-ONLY-yasir",
++    "sk_test_FAKE_yasir_0001",
++  );
++  insert.run(
++    2,
++    "Ayesha Khan",
++    "ayesha.khan@example.test",
++    "user",
++    "$2b$10$FAKE-HASH-FOR-LAB-ONLY-ayesha",
++    "sk_test_FAKE_ayesha_0002",
++  );
++  insert.run(
++    3,
++    "Internship Admin",
++    "admin@example.test",
++    "admin",
++    "$2b$10$FAKE-HASH-FOR-LAB-ONLY-admin",
++    "sk_test_FAKE_admin_0003",
++  );
++  return db;
++}
++
++module.exports = { createDb };
+diff --git a/day-12-review-agents/src/profileRoutes.js b/day-12-review-agents/src/profileRoutes.js
+new file mode 100644
+index 0000000..df4fa3d
+--- /dev/null
++++ b/day-12-review-agents/src/profileRoutes.js
+@@ -0,0 +1,30 @@
++// PR #104 - "Add profile endpoint so LoginForm can show who signed in"
++const { authenticate } = require("./auth");
++
++function createProfileHandler(db) {
++  return (req, res) => {
++    const url = new URL(req.url, "http://localhost");
++    if (req.method !== "GET" || url.pathname !== "/api/profile") {
++      res.statusCode = 404;
++      return res.end();
++    }
++
++    const callerId = authenticate(req);
++    if (callerId === null) {
++      res.statusCode = 401;
++      return res.end(JSON.stringify({ error: "Unauthorized" }));
++    }
++
++    const userId = url.searchParams.get("userId");
++    try {
++      const rows = db.prepare("SELECT * FROM users WHERE id = " + userId).all();
++      res.setHeader("content-type", "application/json");
++      res.end(JSON.stringify(rows));
++    } catch (err) {
++      res.statusCode = 500;
++      res.end(JSON.stringify({ error: err.message }));
++    }
++  };
++}
++
++module.exports = { createProfileHandler };
+diff --git a/day-12-review-agents/src/server.js b/day-12-review-agents/src/server.js
+new file mode 100644
+index 0000000..5a2f683
+--- /dev/null
++++ b/day-12-review-agents/src/server.js
+@@ -0,0 +1,9 @@
++const http = require("node:http");
++const { createDb } = require("./db");
++const { createProfileHandler } = require("./profileRoutes");
++
++if (require.main === module) {
++  http.createServer(createProfileHandler(createDb())).listen(4100, () => {
++    console.log("PR #104 profile API on http://localhost:4100");
++  });
++}
+diff --git a/day-12-review-agents/tests/profile.happy.test.js b/day-12-review-agents/tests/profile.happy.test.js
+new file mode 100644
+index 0000000..0098db3
+--- /dev/null
++++ b/day-12-review-agents/tests/profile.happy.test.js
+@@ -0,0 +1,22 @@
++/** @jest-environment node */
++const http = require("node:http");
++const { createDb } = require("../src/db");
++const { createProfileHandler } = require("../src/profileRoutes");
++
++let server;
++let base;
++beforeAll(async () => {
++  server = http.createServer(createProfileHandler(createDb()));
++  await new Promise((r) => server.listen(0, "127.0.0.1", r));
++  base = `http://127.0.0.1:${server.address().port}`;
++});
++afterAll(() => new Promise((r) => server.close(r)));
++
++test("returns the profile for user 1", async () => {
++  const res = await fetch(`${base}/api/profile?userId=1`, {
++    headers: { Authorization: "Bearer token-yasir" },
++  });
++  const rows = await res.json();
++  expect(res.status).toBe(200);
++  expect(rows.length).toBeGreaterThan(0);
++});

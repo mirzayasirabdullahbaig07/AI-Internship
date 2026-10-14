@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 12 - Review Agent Lab Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      header {
+        max-width: 1320px;
+        margin: 0 auto 16px;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.5rem;
+      }
+      .sub {
+        margin: 0 0 12px;
+        color: #5a6280;
+      }
+      .who {
+        display: inline-block;
+        padding: 6px 12px;
+        background: #fff;
+        border: 1px solid #c9ccd8;
+        border-radius: 999px;
+        font-size: 0.9rem;
+      }
+      button {
+        font: inherit;
+        font-weight: 700;
+        padding: 8px 18px;
+        margin-left: 12px;
+        border: 0;
+        border-radius: 8px;
+        background: #2f4bd6;
+        color: #fff;
+        cursor: pointer;
+      }
+      .grid {
+        max-width: 1320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 20px;
+      }
+      .panel {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgb(27 34 64 / 10%);
+      }
+      .panel h2 {
+        margin: 0;
+        padding: 14px 16px;
+        font-size: 1.05rem;
+      }
+      .panel.vuln h2 {
+        background: #fde8e8;
+        color: #9b1c1c;
+      }
+      .panel.fixed h2 {
+        background: #e3f6ea;
+        color: #14633a;
+      }
+      .attack {
+        padding: 12px 16px;
+        border-top: 1px solid #e3e6f0;
+      }
+      .attack h3 {
+        margin: 0 0 6px;
+        font-size: 0.92rem;
+      }
+      .req {
+        font:
+          12px ui-monospace,
+          Consolas,
+          monospace;
+        color: #5a6280;
+        word-break: break-all;
+        margin-bottom: 6px;
+      }
+      .badges {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .badge {
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: #e3e6f0;
+      }
+      .badge.leak {
+        background: #d92d20;
+        color: #fff;
+      }
+      .badge.safe {
+        background: #1a8f4c;
+        color: #fff;
+      }
+      pre {
+        margin: 0;
+        padding: 8px;
+        background: #1e222e;
+        color: #dde1ee;
+        border-radius: 6px;
+        font:
+          11.5px/1.45 ui-monospace,
+          Consolas,
+          monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .idle {
+        color: #8a90a8;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Day 12 - Review Agent Lab: PR #104 before and after</h1>
+      <p class="sub">
+        The same requests sent to the real PR #104 endpoint (left) and to the fixed
+        endpoint (right).
+      </p>
+      <span class="who"
+        >Signed in as <strong>Mirza Yasir Abdullah Baig</strong> (user id 1, role:
+        user)</span
+      >
+      <button id="run" type="button">Run all attacks</button>
+    </header>
+    <main class="grid">
+      <section class="panel vuln">
+        <h2>PR #104 as proposed (vulnerable)</h2>
+        <div id="vuln"></div>
+      </section>
+      <section class="panel fixed">
+        <h2>After Review Agent fixes</h2>
+        <div id="fixed"></div>
+      </section>
+    </main>
+    <script>
+      const TOKEN = "token-yasir";
+      const enc = encodeURIComponent;
+      const ATTACKS = [
+        {
+          title: "1. Normal request: my own profile",
+          vuln: "/vuln/api/profile?userId=1",
+          fixed: "/fixed/api/profile",
+        },
+        {
+          title: "2. IDOR: ask for Ayesha Khan's profile (id 2)",
+          vuln: "/vuln/api/profile?userId=2",
+          fixed: "/fixed/api/users/2",
+        },
+        {
+          title: "3. SQL injection: id = 1 OR 1=1",
+          vuln: "/vuln/api/profile?userId=" + enc("1 OR 1=1"),
+          fixed: "/fixed/api/users/" + enc("1 OR 1=1"),
+        },
+        {
+          title: "4. Error probe: id = 1'",
+          vuln: "/vuln/api/profile?userId=" + enc("1'"),
+          fixed: "/fixed/api/users/" + enc("1'"),
+        },
+      ];
+      const SECRETS = ["FAKE-HASH", "sk_test_FAKE", "password_hash", "api_key"];
+      const OTHERS = ["Ayesha", "Internship Admin"];
+      const SQLERR = /sql|syntax|unrecognized|near/i;
+
+      function render(host, side) {
+        document.getElementById(side).innerHTML = ATTACKS.map(
+          (a, i) => `<div class="attack"><h3>${a.title}</h3>
+            <div class="req">GET ${a[side]}</div>
+            <div class="badges" id="${side}-b${i}"></div>
+            <pre id="${side}-p${i}" class="idle">not run yet</pre></div>`,
+        ).join("");
+      }
+      function pretty(text) {
+        try {
+          const j = JSON.parse(text);
+          return Array.isArray(j)
+            ? j.map((r) => JSON.stringify(r)).join("\n")
+            : JSON.stringify(j);
+        } catch {
+          return text;
+        }
+      }
+      async function runOne(side, i) {
+        const a = ATTACKS[i];
+        const res = await fetch(a[side], {
+          headers: { Authorization: "Bearer " + TOKEN },
+        });
+        const text = await res.text();
+        const own = a.title.startsWith("1.");
+        const leaks =
+          SECRETS.some((s) => text.includes(s)) ||
+          (!own && OTHERS.some((s) => text.includes(s))) ||
+          SQLERR.test(text);
+        document.getElementById(`${side}-b${i}`).innerHTML =
+          `<span class="badge">HTTP ${res.status}</span><span class="badge ${leaks ? "leak" : "safe"}">${leaks ? "LEAKED / UNSAFE" : "SAFE"}</span>`;
+        const pre = document.getElementById(`${side}-p${i}`);
+        pre.className = "";
+        pre.textContent = pretty(text);
+      }
+      document.getElementById("run").addEventListener("click", async () => {
+        for (const side of ["vuln", "fixed"])
+          for (let i = 0; i < ATTACKS.length; i++) await runOne(side, i);
+        document.body.dataset.done = "true";
+      });
+      render(null, "vuln");
+      render(null, "fixed");
+    </script>
+  </body>
+</html>

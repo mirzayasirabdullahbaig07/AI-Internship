@@ -1,0 +1,8 @@
+Run npm test            (branch: feat/profile-card, change: README typo only)
+FAIL tests/websocket-reconnect.test.ts
+  x reconnects within 2000ms (2003 ms)  <- timeout
+Tests: 1 failed, 40 passed
+--- same job re-run on branch main (no changes) ---
+FAIL tests/websocket-reconnect.test.ts
+  x reconnects within 2000ms (2001 ms)  <- timeout
+Tests: 1 failed, 40 passed

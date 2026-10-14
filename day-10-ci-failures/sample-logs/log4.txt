@@ -1,0 +1,4 @@
+Run npm run typecheck
+src/day-03/tasks.ts(41,22): error TS2339: Property 'completedDate' does not exist on type 'Task'.
+Found 1 error in src/day-03/tasks.ts:41
+Error: Process completed with exit code 2.
