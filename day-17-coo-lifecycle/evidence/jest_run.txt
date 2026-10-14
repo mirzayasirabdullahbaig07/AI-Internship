@@ -1,0 +1,63 @@
+$ npx jest day-17 --verbose
+PASS day-17-coo-lifecycle/tests/lifecycle.test.js
+  Day 17: AI-COO task lifecycle
+    ✓ the full handbook pipeline reaches release_note_drafted with a complete audit log (9 ms)
+    ✓ a run cannot even start without valid AI-COO inputs (Day 16) (2 ms)
+    ✓ advance never mutates the run it is given (1 ms)
+    ✓ task cards that fail validation stop the pipeline (CARDS_INVALID) (1 ms)
+    ✓ unknown events and a missing sha are rejected (1 ms)
+    human gates
+      ✓ an AI agent cannot approve the merge (MERGE_NOT_HUMAN) (3 ms)
+      ✓ the author cannot approve their own merge (SELF_MERGE) (1 ms)
+      ✓ a human who is not the named reviewer cannot approve (1 ms)
+      ✓ only the named human approves the objective; an agent cannot (1 ms)
+    steps cannot be skipped or reordered
+      ✓ tasks before the objective is approved -> WRONG_STATE (1 ms)
+      ✓ implementation before task cards -> WRONG_STATE (1 ms)
+      ✓ review before evidence -> WRONG_STATE (3 ms)
+      ✓ CI before review -> WRONG_STATE (3 ms)
+      ✓ merge approval before CI -> WRONG_STATE (1 ms)
+      ✓ release note before merge approval -> WRONG_STATE (5 ms)
+      ✓ the wrong kind of actor is refused (agent drafting the review, human writing code) (1 ms)
+    independent review and honest evidence
+      ✓ the agent that implemented the change cannot review it (SELF_REVIEW) (2 ms)
+      ✓ evidence with a failing command is refused (4 ms)
+      ✓ evidence must name the commands that were run (1 ms)
+      ✓ review of a different SHA than the candidate is refused (1 ms)
+      ✓ changes_requested sends the run back to implementation and clears the evidence (7 ms)
+      ✓ final CI status not_run does not pass (2 ms)
+      ✓ final CI status infra_blocked does not pass (5 ms)
+      ✓ final CI status failed does not pass (2 ms)
+      ✓ CI on a different SHA than the candidate is refused (1 ms)
+    Final Candidate Rule: a new commit invalidates approvals
+      ✓ pushing a new SHA after review and CI wipes evidence, review and CI (2 ms)
+      ✓ approving the merge for the OLD sha is impossible after a new commit (1 ms)
+      ✓ after merge approval the code is frozen (1 ms)
+PASS day-17-coo-lifecycle/tests/taskCards.test.js
+  Day 17 lab: 'Add dark mode' split into scoped task cards
+    ✓ the AI-COO's cards are valid and form 5 dependency waves (2 ms)
+    ✓ every implementation card has files, non-goals, 2+ acceptance checks and a test (7 ms)
+    ✓ no two implementation cards own the same file (1 ms)
+    ✓ rejects: duplicate id (2 ms)
+    ✓ rejects: unknown dependency (2 ms)
+    ✓ rejects: dependency cycle (11 ms)
+    ✓ rejects: glob in allowed files (1 ms)
+    ✓ rejects: whole directory as allowed files (1 ms)
+    ✓ rejects: no non-goals (4 ms)
+    ✓ rejects: only one acceptance check (1 ms)
+    ✓ rejects: no required test (1 ms)
+    ✓ rejects: no stop-and-report (3 ms)
+    ✓ rejects: AI-COO assigned to implement (11 ms)
+    ✓ rejects: review card owns files (1 ms)
+    ✓ rejects: parallel cards share a file (1 ms)
+    ✓ rejects: no review card (1 ms)
+    ✓ rejects: merge gate not after review (5 ms)
+    ✓ rejects: agent card after the human gate
+    ✓ rejects: two human gates (1 ms)
+    ✓ sharing a file is fine when cards are ordered by a dependency (1 ms)
+    ✓ empty and garbage input never throw (1 ms)
+Test Suites: 2 passed, 2 total
+Tests:       49 passed, 49 total
+Snapshots:   0 total
+Time:        1.084 s, estimated 2 s
+Ran all test suites matching day-17.

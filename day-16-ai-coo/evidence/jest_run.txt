@@ -1,0 +1,31 @@
+$ npx jest day-16 --verbose
+PASS day-16-ai-coo/tests/validateCooInputs.test.js
+  Day 16: AI-COO minimum operating inputs
+    ✓ a complete set is valid and all 14 checks pass (6 ms)
+    ✓ this repo's real inputs file is valid except for the not-yet-named human reviewer (1 ms)
+    ✓ rejects: missing objective (1 ms)
+    ✓ rejects: objective not approved by a human (1 ms)
+    ✓ rejects: owner is an agent (2 ms)
+    ✓ rejects: reviewer missing (1 ms)
+    ✓ rejects: reviewer is an AI (1 ms)
+    ✓ rejects: reviewer is the owner (self-review) (1 ms)
+    ✓ rejects: wildcard repository (3 ms)
+    ✓ rejects: no repositories (2 ms)
+    ✓ rejects: no allowed environments (3 ms)
+    ✓ rejects: production not forbidden (1 ms)
+    ✓ rejects: secrets not forbidden (6 ms)
+    ✓ rejects: only 2 acceptance criteria (1 ms)
+    ✓ rejects: no non-goals
+    ✓ rejects: permissions missing (3 ms)
+    ✓ rejects: invalid write level (5 ms)
+    ✓ rejects: task agent may merge (1 ms)
+    ✓ rejects: AI-COO may merge (2 ms)
+    ✓ rejects: task agent may write to any branch (1 ms)
+    ✓ rejects: review agent may write
+    ✓ garbage input never throws (2 ms)
+    ✓ an empty object fails every check
+Test Suites: 1 passed, 1 total
+Tests:       23 passed, 23 total
+Snapshots:   0 total
+Time:        1.008 s
+Ran all test suites matching day-16.

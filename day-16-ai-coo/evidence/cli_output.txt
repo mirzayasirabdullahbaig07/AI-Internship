@@ -1,0 +1,39 @@
+$ node day-16-ai-coo/src/cli.js day-16-ai-coo/inputs/coo_inputs.json
+[PASS] 1. Approved objective is stated
+[PASS] 1. Objective is approved by a named human
+[PASS] 2. Human owner is named
+[FAIL] 2. Human reviewer is named
+[FAIL] 2. Reviewer is a different person than the owner
+[PASS] 3. Allowed repositories are listed (owner/name, no wildcards)
+[PASS] 3. Allowed environments are listed
+[PASS] 3. Production and secrets are explicitly forbidden
+[PASS] 4. At least 3 acceptance criteria
+[PASS] 4. Explicit non-goals are listed
+[PASS] 5. Permission bounds are defined for every agent
+[PASS] 5. No agent may merge (merge is human-only)
+[PASS] 5. No agent may write to any branch (least privilege)
+[PASS] 5. A review agent exists and is read-only
+
+RESULT: INVALID - 2 problem(s):
+  - REVIEWER: humanReviewer must be a named human (not an agent, not empty)
+  - SEPARATION: owner and reviewer must be different people (never merge your own work)
+exit code: 1
+
+$ node day-16-ai-coo/src/cli.js day-16-ai-coo/inputs/coo_inputs.demo-complete.json
+[PASS] 1. Approved objective is stated
+[PASS] 1. Objective is approved by a named human
+[PASS] 2. Human owner is named
+[PASS] 2. Human reviewer is named
+[PASS] 2. Reviewer is a different person than the owner
+[PASS] 3. Allowed repositories are listed (owner/name, no wildcards)
+[PASS] 3. Allowed environments are listed
+[PASS] 3. Production and secrets are explicitly forbidden
+[PASS] 4. At least 3 acceptance criteria
+[PASS] 4. Explicit non-goals are listed
+[PASS] 5. Permission bounds are defined for every agent
+[PASS] 5. No agent may merge (merge is human-only)
+[PASS] 5. No agent may write to any branch (least privilege)
+[PASS] 5. A review agent exists and is read-only
+
+RESULT: VALID - the AI-COO may start.
+exit code: 0

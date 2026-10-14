@@ -1,0 +1,4 @@
+real: INVALID - 2 problem(s): the AI-COO must NOT start | failing: ['2. Human reviewer is named', '2. Reviewer is a different person than the owner']
+complete: VALID - the AI-COO may start | failing: []
+agentMerge: INVALID - 2 problem(s): the AI-COO must NOT start | failing: ['5. No agent may merge (merge is human-only)', '5. A review agent exists and is read-only']
+selfReview: INVALID - 1 problem(s): the AI-COO must NOT start | failing: ['2. Reviewer is a different person than the owner']

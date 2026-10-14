@@ -1,0 +1,142 @@
+{
+  "request": "Add dark mode",
+  "objective": "Add a user-selectable dark theme to the Leave Request form without changing behaviour or layout.",
+  "cards": [
+    {
+      "id": "T1",
+      "title": "Define light and dark colour tokens as CSS variables",
+      "assignee": "task-agent",
+      "allowedFiles": ["day-19-capstone-leave-request/src/theme/tokens.css"],
+      "nonGoals": [
+        "Do not edit existing stylesheets",
+        "Do not add JavaScript",
+        "No new libraries"
+      ],
+      "acceptanceChecks": [
+        "Every colour used by the form has a --token with a light value",
+        "A [data-theme=\"dark\"] block redefines every token",
+        "All dark text/background pairs meet WCAG AA 4.5:1"
+      ],
+      "requiredTests": ["Covered by T5 contrast test"],
+      "dependsOn": [],
+      "stopAndReport": "A colour in use has no obvious token"
+    },
+    {
+      "id": "T2",
+      "title": "Theme state hook: saved choice, else OS preference",
+      "assignee": "task-agent",
+      "allowedFiles": [
+        "day-19-capstone-leave-request/src/theme/useTheme.ts",
+        "day-19-capstone-leave-request/tests/useTheme.test.tsx"
+      ],
+      "nonGoals": ["No UI", "No server calls", "No new libraries"],
+      "acceptanceChecks": [
+        "Defaults to prefers-color-scheme when nothing is saved",
+        "A saved choice wins over the OS preference",
+        "Storage failure (private mode) falls back without throwing"
+      ],
+      "requiredTests": ["Jest: default, saved choice, storage failure"],
+      "dependsOn": [],
+      "stopAndReport": "localStorage is unavailable in the test environment"
+    },
+    {
+      "id": "T3",
+      "title": "Accessible theme toggle and mount it in the app header",
+      "assignee": "task-agent",
+      "allowedFiles": [
+        "day-19-capstone-leave-request/src/theme/ThemeToggle.tsx",
+        "day-19-capstone-leave-request/src/main.tsx",
+        "day-19-capstone-leave-request/tests/ThemeToggle.test.tsx"
+      ],
+      "nonGoals": ["Do not change form fields", "No icons library", "No new libraries"],
+      "acceptanceChecks": [
+        "A real <button> with aria-pressed reflecting the theme",
+        "Operable with Enter and Space; visible focus",
+        "Label announces the action (Switch to dark theme)"
+      ],
+      "requiredTests": ["Jest: click and keyboard toggle update aria-pressed"],
+      "dependsOn": ["T2"],
+      "stopAndReport": "main.tsx has changed since the task was written"
+    },
+    {
+      "id": "T4",
+      "title": "Move existing styles onto the colour tokens",
+      "assignee": "task-agent",
+      "allowedFiles": ["day-19-capstone-leave-request/src/styles.css"],
+      "nonGoals": [
+        "Do not change spacing, layout or typography",
+        "Do not rename classes",
+        "No new libraries"
+      ],
+      "acceptanceChecks": [
+        "No hard-coded colour remains in styles.css",
+        "The light theme looks pixel-identical to before",
+        "Dark theme renders every state (loading, error, empty, success)"
+      ],
+      "requiredTests": [
+        "Existing component test still passes",
+        "T5 contrast test passes"
+      ],
+      "dependsOn": ["T1"],
+      "stopAndReport": "A rule cannot be expressed with an existing token"
+    },
+    {
+      "id": "T5",
+      "title": "Automated WCAG AA contrast test for both themes",
+      "assignee": "task-agent",
+      "allowedFiles": ["day-19-capstone-leave-request/tests/themeContrast.test.ts"],
+      "nonGoals": ["Do not change colours to make the test pass", "No new libraries"],
+      "acceptanceChecks": [
+        "Parses tokens.css and checks each text/background pair",
+        "Fails when a pair drops below 4.5:1 (negative control)"
+      ],
+      "requiredTests": ["Jest: all pairs pass in light and dark"],
+      "dependsOn": ["T1", "T4"],
+      "stopAndReport": "A pair fails AA - report it, do not weaken the threshold"
+    },
+    {
+      "id": "T6",
+      "title": "Browser flow: toggle, persist across reload, keyboard only",
+      "assignee": "task-agent",
+      "allowedFiles": ["day-19-capstone-leave-request/tools/theme_flow.py"],
+      "nonGoals": ["Do not edit application code", "One flow only"],
+      "acceptanceChecks": [
+        "Toggle switches data-theme and the computed page colours",
+        "The choice survives a reload",
+        "Works using only Tab and Enter"
+      ],
+      "requiredTests": ["Playwright flow exits 0"],
+      "dependsOn": ["T3", "T4"],
+      "stopAndReport": "The toggle is not reachable by keyboard"
+    },
+    {
+      "id": "T7",
+      "title": "Independent review of the whole diff",
+      "assignee": "review-agent",
+      "allowedFiles": [],
+      "nonGoals": ["Do not write code", "No style or formatting remarks"],
+      "acceptanceChecks": [
+        "Diff stays inside every card's allowed files",
+        "Contrast and keyboard checks have evidence",
+        "Every finding has a risk level and a required fix"
+      ],
+      "requiredTests": [],
+      "dependsOn": ["T1", "T2", "T3", "T4", "T5", "T6"],
+      "stopAndReport": "The diff touches a file no card owns"
+    },
+    {
+      "id": "T8",
+      "title": "Human merge approval (security and scope verification)",
+      "assignee": "human",
+      "allowedFiles": [],
+      "nonGoals": ["The author may not approve their own change"],
+      "acceptanceChecks": [
+        "Final CI passed on the exact final SHA",
+        "Reviewer is not the author"
+      ],
+      "requiredTests": [],
+      "dependsOn": ["T7"],
+      "stopAndReport": "CI is Not Run or blocked by infrastructure"
+    }
+  ]
+}

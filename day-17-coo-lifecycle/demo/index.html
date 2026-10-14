@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 17 - AI-COO lifecycle</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 22px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.4rem;
+      }
+      .sub {
+        margin: 0 0 12px;
+        color: #5a6280;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        gap: 16px;
+        max-width: 1340px;
+      }
+      .panel {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgb(27 34 64/10%);
+        overflow: hidden;
+      }
+      .panel h2 {
+        margin: 0;
+        padding: 10px 14px;
+        font-size: 0.98rem;
+        background: #eef0f8;
+      }
+      .waves {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+      }
+      .wave h4 {
+        margin: 0 0 6px;
+        font-size: 0.72rem;
+        color: #5a6280;
+        text-transform: uppercase;
+      }
+      .card {
+        border: 1px solid #c9ccd8;
+        border-left-width: 5px;
+        border-radius: 8px;
+        padding: 6px 8px;
+        margin-bottom: 6px;
+        font-size: 0.74rem;
+        line-height: 1.3;
+      }
+      .card b {
+        display: block;
+        font-size: 0.78rem;
+      }
+      .card small {
+        color: #5a6280;
+      }
+      .task-agent {
+        border-left-color: #2f4bd6;
+      }
+      .review-agent {
+        border-left-color: #b7791f;
+      }
+      .human {
+        border-left-color: #1a8f4c;
+        background: #f2fbf5;
+      }
+      .stages {
+        padding: 10px 12px;
+        display: grid;
+        gap: 5px;
+      }
+      .stage {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: #eef0f8;
+        font-size: 0.84rem;
+      }
+      .stage em {
+        font-style: normal;
+        font-size: 0.68rem;
+        font-weight: 800;
+        color: #5a6280;
+      }
+      .stage.done {
+        background: #e3f6ea;
+      }
+      .stage.done::after {
+        content: "done";
+        font-size: 0.68rem;
+        font-weight: 800;
+        color: #14633a;
+      }
+      .stage.current {
+        outline: 2px solid #2f4bd6;
+      }
+      .bar {
+        padding: 0 12px 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 6px 10px;
+        border: 0;
+        border-radius: 8px;
+        background: #2f4bd6;
+        color: #fff;
+        cursor: pointer;
+      }
+      button.bad {
+        background: #fde8e8;
+        color: #9b1c1c;
+      }
+      button.alt {
+        background: #e8ebf7;
+        color: #1b2240;
+      }
+      #log {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 520px;
+        overflow: auto;
+      }
+      #log li {
+        padding: 6px 14px;
+        border-top: 1px solid #eef0f8;
+        font-size: 0.78rem;
+      }
+      .ok {
+        background: #f2fbf5;
+      }
+      .no {
+        background: #fff6f5;
+      }
+      .tag {
+        font-weight: 800;
+      }
+      .ok .tag {
+        color: #1a8f4c;
+      }
+      .no .tag {
+        color: #d92d20;
+      }
+      code {
+        background: #eef0f8;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Day 17 - AI-COO task lifecycle: "Add dark mode"</h1>
+    <p class="sub">
+      Task cards from the AI-COO (left, validated by the real validator) and the lifecycle
+      with human gates (right, the real state machine).
+    </p>
+    <div class="grid">
+      <section class="panel">
+        <h2 id="cardsTitle">Task cards</h2>
+        <div class="waves" id="waves"></div>
+      </section>
+      <section class="panel">
+        <h2>Lifecycle - <span id="state"></span></h2>
+        <div class="stages" id="stages"></div>
+        <div class="bar">
+          <button id="next">Next valid step</button
+          ><button class="alt" id="reset">Reset</button>
+        </div>
+        <div class="bar" id="illegal"></div>
+      </section>
+    </div>
+    <section class="panel" style="max-width: 1340px; margin-top: 16px">
+      <h2>Audit log (every attempt: accepted or rejected, with the reason)</h2>
+      <ul id="log"></ul>
+    </section>
+    <script src="dist/lifecycle.js"></script>
+    <script>
+      const CARDS = [
+        {
+          id: "T1",
+          title: "Define light and dark colour tokens as CSS variables",
+          assignee: "task-agent",
+          allowedFiles: ["day-19-capstone-leave-request/src/theme/tokens.css"],
+          nonGoals: [
+            "Do not edit existing stylesheets",
+            "Do not add JavaScript",
+            "No new libraries",
+          ],
+          acceptanceChecks: [
+            "Every colour used by the form has a --token with a light value",
+            'A [data-theme="dark"] block redefines every token',
+            "All dark text/background pairs meet WCAG AA 4.5:1",
+          ],
+          requiredTests: ["Covered by T5 contrast test"],
+          dependsOn: [],
+          stopAndReport: "A colour in use has no obvious token",
+        },
+        {
+          id: "T2",
+          title: "Theme state hook: saved choice, else OS preference",
+          assignee: "task-agent",
+          allowedFiles: [
+            "day-19-capstone-leave-request/src/theme/useTheme.ts",
+            "day-19-capstone-leave-request/tests/useTheme.test.tsx",
+          ],
+          nonGoals: ["No UI", "No server calls", "No new libraries"],
+          acceptanceChecks: [
+            "Defaults to prefers-color-scheme when nothing is saved",
+            "A saved choice wins over the OS preference",
+            "Storage failure (private mode) falls back without throwing",
+          ],
+          requiredTests: ["Jest: default, saved choice, storage failure"],
+          dependsOn: [],
+          stopAndReport: "localStorage is unavailable in the test environment",
+        },
+        {
+          id: "T3",
+          title: "Accessible theme toggle and mount it in the app header",
+          assignee: "task-agent",
+          allowedFiles: [
+            "day-19-capstone-leave-request/src/theme/ThemeToggle.tsx",
+            "day-19-capstone-leave-request/src/main.tsx",
+            "day-19-capstone-leave-request/tests/ThemeToggle.test.tsx",
+          ],
+          nonGoals: ["Do not change form fields", "No icons library", "No new libraries"],
+          acceptanceChecks: [
+            "A real <button> with aria-pressed reflecting the theme",
+            "Operable with Enter and Space; visible focus",
+            "Label announces the action (Switch to dark theme)",
+          ],
+          requiredTests: ["Jest: click and keyboard toggle update aria-pressed"],
+          dependsOn: ["T2"],
+          stopAndReport: "main.tsx has changed since the task was written",
+        },
+        {
+          id: "T4",
+          title: "Move existing styles onto the colour tokens",
+          assignee: "task-agent",
+          allowedFiles: ["day-19-capstone-leave-request/src/styles.css"],
+          nonGoals: [
+            "Do not change spacing, layout or typography",
+            "Do not rename classes",
+            "No new libraries",
+          ],
+          acceptanceChecks: [
+            "No hard-coded colour remains in styles.css",
+            "The light theme looks pixel-identical to before",
+            "Dark theme renders every state (loading, error, empty, success)",
+          ],
+          requiredTests: [
+            "Existing component test still passes",
+            "T5 contrast test passes",
+          ],
+          dependsOn: ["T1"],
+          stopAndReport: "A rule cannot be expressed with an existing token",
+        },
+        {
+          id: "T5",
+          title: "Automated WCAG AA contrast test for both themes",
+          assignee: "task-agent",
+          allowedFiles: ["day-19-capstone-leave-request/tests/themeContrast.test.ts"],
+          nonGoals: ["Do not change colours to make the test pass", "No new libraries"],
+          acceptanceChecks: [
+            "Parses tokens.css and checks each text/background pair",
+            "Fails when a pair drops below 4.5:1 (negative control)",
+          ],
+          requiredTests: ["Jest: all pairs pass in light and dark"],
+          dependsOn: ["T1", "T4"],
+          stopAndReport: "A pair fails AA - report it, do not weaken the threshold",
+        },
+        {
+          id: "T6",
+          title: "Browser flow: toggle, persist across reload, keyboard only",
+          assignee: "task-agent",
+          allowedFiles: ["day-19-capstone-leave-request/tools/theme_flow.py"],
+          nonGoals: ["Do not edit application code", "One flow only"],
+          acceptanceChecks: [
+            "Toggle switches data-theme and the computed page colours",
+            "The choice survives a reload",
+            "Works using only Tab and Enter",
+          ],
+          requiredTests: ["Playwright flow exits 0"],
+          dependsOn: ["T3", "T4"],
+          stopAndReport: "The toggle is not reachable by keyboard",
+        },
+        {
+          id: "T7",
+          title: "Independent review of the whole diff",
+          assignee: "review-agent",
+          allowedFiles: [],
+          nonGoals: ["Do not write code", "No style or formatting remarks"],
+          acceptanceChecks: [
+            "Diff stays inside every card's allowed files",
+            "Contrast and keyboard checks have evidence",
+            "Every finding has a risk level and a required fix",
+          ],
+          requiredTests: [],
+          dependsOn: ["T1", "T2", "T3", "T4", "T5", "T6"],
+          stopAndReport: "The diff touches a file no card owns",
+        },
+        {
+          id: "T8",
+          title: "Human merge approval (security and scope verification)",
+          assignee: "human",
+          allowedFiles: [],
+          nonGoals: ["The author may not approve their own change"],
+          acceptanceChecks: [
+            "Final CI passed on the exact final SHA",
+            "Reviewer is not the author",
+          ],
+          requiredTests: [],
+          dependsOn: ["T7"],
+          stopAndReport: "CI is Not Run or blocked by infrastructure",
+        },
+      ];
+      const INPUTS = {
+        objective:
+          "Build, test and hand off a responsive Leave Request form (capstone) as a Draft PR.",
+        objectiveApprovedBy: "Mirza Yasir Abdullah Baig",
+        humanOwner: "Mirza Yasir Abdullah Baig",
+        humanReviewer: "Ayesha Khan",
+        repositories: ["mirzayasirabdullahbaig07/AI-Internship"],
+        environment: {
+          allowed: [
+            "local development machine",
+            "feature branches of the allowed repository",
+          ],
+          forbidden: [
+            "production",
+            "real employee or customer data",
+            "secrets and credentials",
+          ],
+        },
+        acceptanceCriteria: [
+          "Form validates dates, reason length, 30-day maximum and overlap with approved leave",
+          "Loading, error (with retry), empty and success states are all handled",
+          "Fully keyboard operable with visible focus and announced errors",
+          "One component test and one browser flow test pass locally",
+        ],
+        nonGoals: [
+          "No changes to existing days or screens",
+          "No new runtime dependencies",
+          "No real data",
+        ],
+        permissions: {
+          "ai-coo": { read: true, write: "none", merge: false },
+          "task-agent": { read: true, write: "own-branch", merge: false },
+          "review-agent": { read: true, write: "none", merge: false },
+        },
+      };
+      const A = {
+        owner: { kind: "human", id: "Mirza Yasir Abdullah Baig" },
+        reviewer: { kind: "human", id: "Ayesha Khan" },
+        coo: { kind: "ai_coo", id: "coo-1" },
+        task: { kind: "task_agent", id: "task-agent-1" },
+        review: { kind: "review_agent", id: "review-agent-1" },
+        system: { kind: "system", id: "ci" },
+      };
+      const SHA = "a1b2c3d",
+        SHA2 = "e4f5a6b";
+      const checks = [{ command: "npm run verify", exitCode: 0 }];
+      const HAPPY = [
+        { type: "approve_objective", actor: A.owner },
+        { type: "generate_tasks", actor: A.coo, payload: { cards: CARDS } },
+        { type: "implement", actor: A.task, payload: { sha: SHA } },
+        { type: "report_evidence", actor: A.task, payload: { sha: SHA, checks } },
+        { type: "review", actor: A.review, payload: { sha: SHA, verdict: "approve" } },
+        { type: "final_ci", actor: A.system, payload: { sha: SHA, status: "passed" } },
+        { type: "approve_merge", actor: A.reviewer, payload: {} },
+        {
+          type: "draft_release_note",
+          actor: A.coo,
+          payload: { text: "Dark mode added." },
+        },
+      ];
+      const ILLEGAL = [
+        [
+          "AI agent approves merge",
+          { type: "approve_merge", actor: A.review, payload: {} },
+        ],
+        [
+          "Author approves own merge",
+          { type: "approve_merge", actor: A.owner, payload: {} },
+        ],
+        [
+          "Skip ahead: approve merge now",
+          { type: "approve_merge", actor: A.reviewer, payload: {} },
+        ],
+        [
+          "Implementer reviews itself",
+          {
+            type: "review",
+            actor: { kind: "review_agent", id: "task-agent-1" },
+            payload: { sha: SHA, verdict: "approve" },
+          },
+        ],
+        [
+          "CI 'not_run' reported",
+          { type: "final_ci", actor: A.system, payload: { sha: SHA, status: "not_run" } },
+        ],
+        [
+          "CI on a different SHA",
+          { type: "final_ci", actor: A.system, payload: { sha: SHA2, status: "passed" } },
+        ],
+        [
+          "New commit (Final Candidate Rule)",
+          { type: "implement", actor: A.task, payload: { sha: SHA2 } },
+        ],
+      ];
+      let run, step;
+      const log = document.getElementById("log");
+      const waves = LIFE.validateTaskCards(CARDS);
+      document.getElementById("cardsTitle").textContent =
+        "Task cards - " +
+        (waves.valid ? "VALID" : "INVALID") +
+        ": " +
+        CARDS.length +
+        " cards in " +
+        waves.waves.length +
+        " waves";
+      document.getElementById("waves").innerHTML = waves.waves
+        .map(
+          (w, i) =>
+            '<div class="wave"><h4>Wave ' +
+            (i + 1) +
+            "</h4>" +
+            w
+              .map((id) => {
+                const c = CARDS.find((x) => x.id === id);
+                return (
+                  '<div class="card ' +
+                  c.assignee +
+                  '"><b>' +
+                  c.id +
+                  " " +
+                  c.title +
+                  "</b><small>" +
+                  c.assignee +
+                  (c.dependsOn.length ? " | after " + c.dependsOn.join(",") : "") +
+                  "</small></div>"
+                );
+              })
+              .join("") +
+            "</div>",
+        )
+        .join("");
+      function paint() {
+        document.getElementById("state").textContent = run.state;
+        const idx = LIFE.ORDER.indexOf(run.state);
+        document.getElementById("stages").innerHTML = LIFE.STAGES.map(
+          (s, i) =>
+            '<div class="stage ' +
+            (LIFE.ORDER.indexOf(s.state) <= idx ? "done" : "") +
+            (LIFE.ORDER.indexOf(s.state) === idx + 1 ? " current" : "") +
+            '"><span>' +
+            (i + 1) +
+            ". " +
+            s.label +
+            "</span><em>" +
+            s.actor +
+            "</em></div>",
+        ).join("");
+      }
+      function add(ok, text) {
+        const li = document.createElement("li");
+        li.className = ok ? "ok" : "no";
+        li.innerHTML =
+          '<span class="tag">' + (ok ? "ACCEPTED" : "REJECTED") + "</span> " + text;
+        log.prepend(li);
+      }
+      function attempt(label, ev) {
+        const r = LIFE.tryAdvance(run, ev);
+        const who = ev.actor.kind + ":" + ev.actor.id;
+        if (r.ok) {
+          run = r.run;
+          add(true, "<b>" + label + "</b> by " + who + " - " + run.log.at(-1).note);
+        } else
+          add(
+            false,
+            "<b>" +
+              label +
+              "</b> by " +
+              who +
+              " - <code>" +
+              r.code +
+              "</code> " +
+              r.message,
+          );
+        paint();
+        document.body.dataset.state = run.state;
+      }
+      function reset() {
+        run = LIFE.createRun(INPUTS);
+        step = 0;
+        log.innerHTML = "";
+        paint();
+        document.body.dataset.state = run.state;
+      }
+      document.getElementById("next").onclick = () => {
+        if (step < HAPPY.length) {
+          const ev = HAPPY[step];
+          const before = run.state;
+          attempt(ev.type, ev);
+          if (run.state !== before || ev.type === "implement") step++;
+        }
+      };
+      document.getElementById("reset").onclick = reset;
+      document.getElementById("illegal").innerHTML = ILLEGAL.map(
+        (x, i) => '<button class="bad" data-i="' + i + '">' + x[0] + "</button>",
+      ).join("");
+      document.querySelectorAll("#illegal button").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const [l, e] = ILLEGAL[b.dataset.i];
+            attempt(l, e);
+          }),
+      );
+      reset();
+      document.body.dataset.ready = "true";
+    </script>
+  </body>
+</html>

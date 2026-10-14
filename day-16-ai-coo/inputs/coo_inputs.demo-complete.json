@@ -1,0 +1,34 @@
+{
+  "objective": "Build, test and hand off a responsive Leave Request form (capstone) as a Draft PR.",
+  "objectiveApprovedBy": "Mirza Yasir Abdullah Baig",
+  "humanOwner": "Mirza Yasir Abdullah Baig",
+  "humanReviewer": "Ayesha Khan",
+  "repositories": ["mirzayasirabdullahbaig07/AI-Internship"],
+  "environment": {
+    "allowed": [
+      "local development machine",
+      "feature branches of the allowed repository"
+    ],
+    "forbidden": [
+      "production",
+      "real employee or customer data",
+      "secrets and credentials"
+    ]
+  },
+  "acceptanceCriteria": [
+    "Form validates dates, reason length, 30-day maximum and overlap with approved leave",
+    "Loading, error (with retry), empty and success states are all handled",
+    "Fully keyboard operable with visible focus and announced errors",
+    "One component test and one browser flow test pass locally"
+  ],
+  "nonGoals": [
+    "No changes to existing days or screens",
+    "No new runtime dependencies",
+    "No real data"
+  ],
+  "permissions": {
+    "ai-coo": { "read": true, "write": "none", "merge": false },
+    "task-agent": { "read": true, "write": "own-branch", "merge": false },
+    "review-agent": { "read": true, "write": "none", "merge": false }
+  }
+}
