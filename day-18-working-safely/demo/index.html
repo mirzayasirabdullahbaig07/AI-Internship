@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 18 - Working safely with agents</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 22px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.4rem;
+      }
+      .sub {
+        margin: 0 0 14px;
+        color: #5a6280;
+      }
+      .panel {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgb(27 34 64/10%);
+        overflow: hidden;
+        max-width: 1320px;
+        margin-bottom: 16px;
+      }
+      .panel h2 {
+        margin: 0;
+        padding: 10px 16px;
+        font-size: 1rem;
+        background: #eef0f8;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.85rem;
+      }
+      td,
+      th {
+        padding: 6px 14px;
+        border-top: 1px solid #eef0f8;
+        text-align: left;
+        vertical-align: top;
+      }
+      .st {
+        font-weight: 800;
+        font-size: 0.72rem;
+        padding: 2px 9px;
+        border-radius: 999px;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .PASS {
+        background: #1a8f4c;
+      }
+      .FAIL {
+        background: #d92d20;
+      }
+      .WARN {
+        background: #b7791f;
+      }
+      .MANUAL {
+        background: #5a6280;
+      }
+      textarea {
+        width: 100%;
+        height: 230px;
+        border: 0;
+        padding: 10px 14px;
+        font:
+          12px/1.5 ui-monospace,
+          Consolas,
+          monospace;
+        resize: none;
+        outline: none;
+      }
+      .bar {
+        padding: 8px 14px;
+        display: flex;
+        gap: 8px;
+        border-top: 1px solid #eef0f8;
+      }
+      button {
+        font: inherit;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 6px 14px;
+        border: 0;
+        border-radius: 8px;
+        background: #2f4bd6;
+        color: #fff;
+        cursor: pointer;
+      }
+      button.alt {
+        background: #e8ebf7;
+        color: #1b2240;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 8px 14px;
+        font-size: 0.84rem;
+      }
+      li {
+        padding: 4px 0;
+      }
+      li b {
+        color: #d92d20;
+      }
+      .good {
+        color: #14633a;
+        font-weight: 800;
+      }
+      .bad {
+        color: #9b1c1c;
+        font-weight: 800;
+      }
+      code {
+        background: #eef0f8;
+        padding: 0 5px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Day 18 - Working safely with agents</h1>
+    <p class="sub">
+      The real scanner, audit and handoff validator, running in the browser.
+    </p>
+    <section class="panel">
+      <h2>1. Repository safety audit (real run: npm run safety)</h2>
+      <div id="audit"></div>
+    </section>
+    <section class="panel two">
+      <div>
+        <h2 style="margin: 0; padding: 10px 16px; font-size: 1rem; background: #eef0f8">
+          2. Secret scanner: paste text, then Scan
+        </h2>
+        <textarea id="code" spellcheck="false"></textarea>
+        <div class="bar"><button id="scan">Scan</button></div>
+      </div>
+      <div>
+        <h2 style="margin: 0; padding: 10px 16px; font-size: 1rem; background: #eef0f8">
+          Findings (secret values are never shown)
+        </h2>
+        <div id="findings"></div>
+      </div>
+    </section>
+    <section class="panel two">
+      <div>
+        <h2 style="margin: 0; padding: 10px 16px; font-size: 1rem; background: #eef0f8">
+          3. Handoff report: edit, then Validate
+        </h2>
+        <textarea id="handoff" spellcheck="false" style="height: 330px"></textarea>
+        <div class="bar">
+          <button class="alt" id="good">Real handoff</button
+          ><button class="alt" id="bad">Unsafe handoff</button
+          ><button id="validate">Validate</button>
+        </div>
+      </div>
+      <div>
+        <h2 style="margin: 0; padding: 10px 16px; font-size: 1rem; background: #eef0f8">
+          Validation result
+        </h2>
+        <div id="hres"></div>
+      </div>
+    </section>
+    <script src="dist/safe.js"></script>
+    <script>
+      const AUDIT = {
+        checks: [
+          {
+            id: "secrets",
+            title: "No secrets in tracked files",
+            status: "PASS",
+            detail:
+              "153 files scanned, 0 findings (11 fake/placeholder values suppressed)",
+            findings: [],
+          },
+          {
+            id: "gitignore",
+            title: ".gitignore blocks .env, key files and node_modules",
+            status: "PASS",
+            detail: "all required patterns present",
+          },
+          {
+            id: "env-files",
+            title: "No .env files are tracked",
+            status: "PASS",
+            detail: "none tracked",
+          },
+          {
+            id: "codeowners",
+            title: "CODEOWNERS file exists (review ownership)",
+            status: "PASS",
+            detail: "found",
+          },
+          {
+            id: "pr-template",
+            title: "Pull request template exists (Week 2 format)",
+            status: "PASS",
+            detail: "found",
+          },
+          {
+            id: "audit-log",
+            title: "Git history is an attributable audit trail",
+            status: "PASS",
+            detail: "53 commits, 0 without author name/email",
+          },
+          {
+            id: "pre-commit",
+            title: "Local pre-commit secret scan is installed",
+            status: "PASS",
+            detail: "hook installed",
+          },
+          {
+            id: "env-credentials",
+            title: "No production credentials in the agent environment",
+            status: "PASS",
+            detail:
+              "no sensitive-looking environment variable names (names only were checked; values are never read)",
+          },
+          {
+            id: "branch-protection",
+            title:
+              "Branch protection on main (PR required, 1+ approval, status check, no force-push)",
+            detail:
+              "GitHub setting - cannot be verified from a local clone. Owner must enable it: see REPO_SAFETY.md",
+            status: "MANUAL",
+          },
+          {
+            id: "secret-scanning",
+            title: "GitHub secret scanning and push protection enabled",
+            detail:
+              "GitHub setting - cannot be verified locally. Owner must enable it: see REPO_SAFETY.md",
+            status: "MANUAL",
+          },
+          {
+            id: "agent-token",
+            title:
+              "Agent tokens are least-privilege (fine-grained, this repo only, no admin, no merge)",
+            detail:
+              "Depends on how the agent is connected - verify in GitHub token settings",
+            status: "MANUAL",
+          },
+          {
+            id: "github-audit-log",
+            title: "GitHub audit log is reviewed",
+            detail:
+              "Needs an organisation or account audit log; git history above is only the local proxy",
+            status: "MANUAL",
+          },
+        ],
+        summary: { PASS: 8, FAIL: 0, WARN: 0, MANUAL: 4 },
+        ok: true,
+      };
+      const GOOD =
+        "# Handoff report\n\n## PR link\n\nNOT OPENED\n\n## Final SHA\n\n44b9f57\n\n## Scoped objective\n\nDeliver Days 11-18 (task agent, review agent, token diet, tests that matter, security and privacy, AI-COO inputs and lifecycle, repository safety) as locally tested work on main. Nothing is deployed.\n\n## Test evidence\n\n- npm run verify (on 44b9f57) -> exit 0 (Prettier clean, TypeScript clean, 17 suites, 211 tests passed)\n- npm run safety (on 44b9f57) -> 0 failing checks, 7 pass; secret scan: 153 files scanned, 0 findings (11 fake/placeholder values suppressed); 4 GitHub settings not verifiable locally\n\n## Remaining blockers\n\n- Hosted CI has not been run on this SHA.\n- No human reviewer is named yet (day-16-ai-coo/inputs/coo_inputs.json has humanReviewer set to null).\n- Branch protection and GitHub secret scanning cannot be verified from a local clone; the owner must enable them.\n- Playwright browser checks were run per day and were not re-run on this SHA.\n- npm audit reports 19 moderate advisories in dev-only test tooling (0 in runtime); the suggested fix is a breaking downgrade, so it was not applied.\n";
+      const j = (...p) => p.join("");
+      const SAMPLE = [
+        "const config = {",
+        "  region: 'eu-west-1',",
+        "  awsKey: '" + j("AKIA", "QWERTYUIOPASDFGH") + "',",
+        "  github: '" + j("ghp_", "a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8") + "',",
+        "  db: '" + j("postgres://appuser", ":Zx9wQ4tLm2@db.internal/app") + "',",
+        "  " + j("pass", "word") + ": '" + j("Sup3rS3cret", "Value") + "',",
+        "  fakeUser: { " +
+          j("pass", "word") +
+          ": 'lab-pass-yasir-1' },   // fake lab value: suppressed",
+        "  timeout: process.env.TIMEOUT_MS",
+        "};",
+      ].join("\n");
+      const BAD = GOOD.replace(
+        "## Remaining blockers",
+        "## Implementation notes\nHere is the fix:\n```js\nconst token = '" +
+          j("ghp_", "a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8") +
+          "';\n```\n\n## Remaining blockers",
+      );
+      document.getElementById("audit").innerHTML =
+        "<table><tr><th>Status</th><th>Check</th><th>Detail</th></tr>" +
+        AUDIT.checks
+          .map(
+            (c) =>
+              '<tr><td><span class="st ' +
+              c.status +
+              '">' +
+              c.status +
+              "</span></td><td>" +
+              c.title +
+              "</td><td>" +
+              c.detail.replace(/</g, "&lt;") +
+              "</td></tr>",
+          )
+          .join("") +
+        "</table>";
+      document.getElementById("code").value = SAMPLE;
+      document.getElementById("handoff").value = GOOD;
+      function scan() {
+        const r = SAFE.scanText(document.getElementById("code").value, {
+          file: "config.js",
+        });
+        document.getElementById("findings").innerHTML =
+          "<ul>" +
+          r.findings
+            .map(
+              (f) =>
+                "<li><b>FOUND</b> line " +
+                f.line +
+                " <code>" +
+                f.rule +
+                "</code> preview <code>" +
+                f.preview +
+                "</code></li>",
+            )
+            .join("") +
+          r.suppressed
+            .map(
+              (f) =>
+                "<li>suppressed (fake value) line " +
+                f.line +
+                " <code>" +
+                f.rule +
+                "</code></li>",
+            )
+            .join("") +
+          "<li>" +
+          (r.findings.length
+            ? '<span class="bad">' +
+              r.findings.length +
+              " secret(s): commit would be BLOCKED</span>"
+            : '<span class="good">no secrets: commit allowed</span>') +
+          "</li></ul>";
+      }
+      function validate() {
+        const r = SAFE.validateHandoff(document.getElementById("handoff").value);
+        document.getElementById("hres").innerHTML =
+          "<ul><li>" +
+          (r.valid
+            ? '<span class="good">VALID: only PR link, SHA, objective, evidence, blockers</span>'
+            : '<span class="bad">INVALID: ' + r.errors.length + " problem(s)</span>") +
+          "</li>" +
+          r.errors
+            .map(
+              (e) =>
+                "<li><b>" + e.code + "</b> " + e.message.replace(/</g, "&lt;") + "</li>",
+            )
+            .join("") +
+          "</ul>";
+      }
+      document.getElementById("scan").onclick = scan;
+      document.getElementById("validate").onclick = validate;
+      document.getElementById("good").onclick = () => {
+        document.getElementById("handoff").value = GOOD;
+        validate();
+      };
+      document.getElementById("bad").onclick = () => {
+        document.getElementById("handoff").value = BAD;
+        validate();
+      };
+      scan();
+      validate();
+      document.body.dataset.ready = "true";
+    </script>
+  </body>
+</html>

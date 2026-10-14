@@ -1,0 +1,26 @@
+[PASS  ] No secrets in tracked files
+         153 files scanned, 0 findings (11 fake/placeholder values suppressed)
+[PASS  ] .gitignore blocks .env, key files and node_modules
+         all required patterns present
+[PASS  ] No .env files are tracked
+         none tracked
+[PASS  ] CODEOWNERS file exists (review ownership)
+         found
+[PASS  ] Pull request template exists (Week 2 format)
+         found
+[PASS  ] Git history is an attributable audit trail
+         53 commits, 0 without author name/email
+[PASS  ] Local pre-commit secret scan is installed
+         hook installed
+[PASS  ] No production credentials in the agent environment
+         no sensitive-looking environment variable names (names only were checked; values are never read)
+[MANUAL] Branch protection on main (PR required, 1+ approval, status check, no force-push)
+         GitHub setting - cannot be verified from a local clone. Owner must enable it: see REPO_SAFETY.md
+[MANUAL] GitHub secret scanning and push protection enabled
+         GitHub setting - cannot be verified locally. Owner must enable it: see REPO_SAFETY.md
+[MANUAL] Agent tokens are least-privilege (fine-grained, this repo only, no admin, no merge)
+         Depends on how the agent is connected - verify in GitHub token settings
+[MANUAL] GitHub audit log is reviewed
+         Needs an organisation or account audit log; git history above is only the local proxy
+
+SUMMARY: 8 pass, 0 fail, 0 warn, 4 manual (not verifiable locally)

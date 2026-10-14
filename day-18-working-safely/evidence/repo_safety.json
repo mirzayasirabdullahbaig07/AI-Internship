@@ -1,0 +1,84 @@
+{
+  "checks": [
+    {
+      "id": "secrets",
+      "title": "No secrets in tracked files",
+      "status": "PASS",
+      "detail": "153 files scanned, 0 findings (11 fake/placeholder values suppressed)",
+      "findings": []
+    },
+    {
+      "id": "gitignore",
+      "title": ".gitignore blocks .env, key files and node_modules",
+      "status": "PASS",
+      "detail": "all required patterns present"
+    },
+    {
+      "id": "env-files",
+      "title": "No .env files are tracked",
+      "status": "PASS",
+      "detail": "none tracked"
+    },
+    {
+      "id": "codeowners",
+      "title": "CODEOWNERS file exists (review ownership)",
+      "status": "PASS",
+      "detail": "found"
+    },
+    {
+      "id": "pr-template",
+      "title": "Pull request template exists (Week 2 format)",
+      "status": "PASS",
+      "detail": "found"
+    },
+    {
+      "id": "audit-log",
+      "title": "Git history is an attributable audit trail",
+      "status": "PASS",
+      "detail": "53 commits, 0 without author name/email"
+    },
+    {
+      "id": "pre-commit",
+      "title": "Local pre-commit secret scan is installed",
+      "status": "PASS",
+      "detail": "hook installed"
+    },
+    {
+      "id": "env-credentials",
+      "title": "No production credentials in the agent environment",
+      "status": "PASS",
+      "detail": "no sensitive-looking environment variable names (names only were checked; values are never read)"
+    },
+    {
+      "id": "branch-protection",
+      "title": "Branch protection on main (PR required, 1+ approval, status check, no force-push)",
+      "detail": "GitHub setting - cannot be verified from a local clone. Owner must enable it: see REPO_SAFETY.md",
+      "status": "MANUAL"
+    },
+    {
+      "id": "secret-scanning",
+      "title": "GitHub secret scanning and push protection enabled",
+      "detail": "GitHub setting - cannot be verified locally. Owner must enable it: see REPO_SAFETY.md",
+      "status": "MANUAL"
+    },
+    {
+      "id": "agent-token",
+      "title": "Agent tokens are least-privilege (fine-grained, this repo only, no admin, no merge)",
+      "detail": "Depends on how the agent is connected - verify in GitHub token settings",
+      "status": "MANUAL"
+    },
+    {
+      "id": "github-audit-log",
+      "title": "GitHub audit log is reviewed",
+      "detail": "Needs an organisation or account audit log; git history above is only the local proxy",
+      "status": "MANUAL"
+    }
+  ],
+  "summary": {
+    "PASS": 8,
+    "FAIL": 0,
+    "WARN": 0,
+    "MANUAL": 4
+  },
+  "ok": true
+}

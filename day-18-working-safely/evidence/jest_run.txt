@@ -1,0 +1,57 @@
+$ npx jest day-18 --verbose
+PASS day-18-working-safely/tests/repoSafety.test.js
+  Day 18: repository safety audit
+    ✓ a clean repo passes every locally verifiable check; GitHub settings stay MANUAL (29 ms)
+    ✓ a committed secret fails the audit and the report never shows the secret (21 ms)
+    ✓ a tracked .env file fails (21 ms)
+    ✓ a tracked .env.example is allowed (20 ms)
+    ✓ a .gitignore without .env / key patterns fails and lists what is missing (23 ms)
+    ✓ missing CODEOWNERS and PR template fail (31 ms)
+    ✓ sensitive-looking environment variable NAMES warn; values are never read (2 ms)
+    ✓ the pre-commit hook blocks a staged secret and allows clean changes (57 ms)
+    ✓ the hook scans what is STAGED, not the working tree (32 ms)
+PASS day-18-working-safely/tests/handoff.test.js
+  Day 18: safe handoff report
+    ✓ a built handoff contains ONLY the five required sections and validates (3 ms)
+    ✓ an unopened PR is stated honestly and becomes a blocker automatically (6 ms)
+    ✓ no blockers is written as 'none'
+    ✓ a secret reported by the validator is redacted in the error message (1 ms)
+    ✓ garbage input never throws (1 ms)
+    rejects what a handoff must never contain
+      ✓ a fenced code block (1 ms)
+      ✓ an indented code block (3 ms)
+      ✓ source code keywords (1 ms)
+      ✓ a pasted stack trace
+      ✓ HTML markup (3 ms)
+      ✓ an AWS key
+      ✓ a GitHub token
+      ✓ an extra section
+      ✓ a missing section
+      ✓ sections in the wrong order
+      ✓ a non-https PR link
+      ✓ a bad SHA (3 ms)
+      ✓ a short objective (1 ms)
+      ✓ no test evidence
+      ✓ an unopened PR without a PR blocker is rejected (2 ms)
+PASS day-18-working-safely/tests/secretScanner.test.js
+  Day 18: secret scanner
+    ✓ detects aws-access-key (1 ms)
+    ✓ detects github-token
+    ✓ detects slack-token (4 ms)
+    ✓ detects stripe-live-key (5 ms)
+    ✓ detects llm-api-key (1 ms)
+    ✓ detects google-api-key
+    ✓ detects private-key-block
+    ✓ detects jwt
+    ✓ detects credentials-in-url (3 ms)
+    ✓ detects hardcoded-secret (1 ms)
+    ✓ a finding never contains the secret itself (redacted preview) (3 ms)
+    ✓ fake and placeholder values are suppressed, and counted (1 ms)
+    ✓ the inline allow marker suppresses only its own line (7 ms)
+    ✓ ordinary code and prose are not flagged
+    ✓ reports the correct file and line for multiple findings (1 ms)
+Test Suites: 3 passed, 3 total
+Tests:       44 passed, 44 total
+Snapshots:   0 total
+Time:        1.208 s
+Ran all test suites matching day-18.
