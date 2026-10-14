@@ -1,0 +1,35 @@
+$ npm run test:insecure   (TARGET=insecure - EXPECTED to fail; failures prove the findings)
+FAIL day-15-security-privacy/tests/security.test.js
+  Notes API security (target: insecure)
+    A01 Broken Access Control
+      ✕ a user cannot delete someone else's note (and the note survives) (42 ms)
+      ✓ an owner can delete their own note (16 ms)
+      ✓ an admin can delete any note (21 ms)
+      ✕ owner_id in a POST body is ignored: the caller always owns what they create (20 ms)
+      ✕ listing notes returns only the caller's notes (29 ms)
+    A02 Security Misconfiguration
+      ✕ secure response headers are set and CORS is not wide open (19 ms)
+    A04 Cryptographic Failures
+      ✕ passwords are stored with a salted slow hash, not MD5 (1 ms)
+      ✕ session tokens are random (two logins differ) and long (13 ms)
+    A05 Injection
+      ✕ SQL injection in the search term does not expose other users' notes (13 ms)
+      ✕ a malformed search term does not produce a database error (7 ms)
+      ✕ SQL injection in login (UNION SELECT) cannot log an attacker in as the admin (6 ms)
+    A06 Insecure Design (limits)
+      ✕ title and body have length limits (5 ms)
+      ✕ a user cannot create unlimited notes (94 ms)
+      ✕ an oversized request body is refused (413) (6 ms)
+    A07 Authentication Failures
+      ✕ unknown user and wrong password are indistinguishable (no user enumeration) (6 ms)
+      ✕ login is rate limited: 5 failures lock the account (429), even for the right password (10 ms)
+      ✕ a forged token (base64 of id:email) is rejected (4 ms)
+      ✕ sessions expire (7 ms)
+    A09 Security Logging & Alerting + privacy
+      ✕ logs never contain passwords or tokens (5 ms)
+      ✕ failed logins and denied actions produce security events (7 ms)
+      ✕ responses expose no more personal data than needed (no emails, no hashes) (11 ms)
+    A10 Mishandling of Exceptional Conditions
+      ✕ invalid JSON gives a clean 400 with no stack trace (3 ms)
+Test Suites: 1 failed, 1 total
+Tests:       20 failed, 2 passed, 22 total

@@ -1,0 +1,100 @@
+{
+  "criteria": [
+    {
+      "id": "C1",
+      "label": "Responsive 320px to desktop, no horizontal scroll",
+      "verbose": ["small phone", "scroll sideways"],
+      "brief": ["320px", "no horizontal scroll"]
+    },
+    {
+      "id": "C2",
+      "label": "Typed local fake data, no real employee info",
+      "verbose": ["made up sample data", "proper types"],
+      "brief": ["typed local fake data", "no real employee"]
+    },
+    {
+      "id": "C3",
+      "label": "End date not before start date",
+      "verbose": ["end date must never be before the start date"],
+      "brief": ["end date not before start"]
+    },
+    {
+      "id": "C4",
+      "label": "Start date not in the past",
+      "verbose": ["start date must not be in the past"],
+      "brief": ["start date not in the past"]
+    },
+    {
+      "id": "C5",
+      "label": "Reason required with min/max length",
+      "verbose": ["reason must not be empty", "minimum and maximum"],
+      "brief": ["reason required", "10-500"]
+    },
+    {
+      "id": "C6",
+      "label": "Maximum 30 days per request",
+      "verbose": ["thirty days"],
+      "brief": ["30 days"]
+    },
+    {
+      "id": "C7",
+      "label": "Reject overlap with approved leave",
+      "verbose": ["overlaps with leave that has already been approved"],
+      "brief": ["overlap with approved leave"]
+    },
+    {
+      "id": "C8",
+      "label": "Inline message beside the field",
+      "verbose": ["next to the field"],
+      "brief": ["beside the field"]
+    },
+    {
+      "id": "C9",
+      "label": "UI states: loading, error + retry, empty, success",
+      "verbose": ["loading", "try again", "empty message", "success confirmation"],
+      "brief": ["loading", "error with retry", "empty", "success"]
+    },
+    {
+      "id": "C10",
+      "label": "Keyboard-only, visible focus, labels, screen-reader errors",
+      "verbose": ["keyboard alone", "visible focus", "proper labels", "screen readers"],
+      "brief": ["keyboard operable", "visible focus", "labelled fields", "screen readers"]
+    },
+    {
+      "id": "C11",
+      "label": "One component test and one real-browser flow test",
+      "verbose": ["one focused automated test for the form component", "real browser"],
+      "brief": ["one component test", "real-browser"]
+    },
+    {
+      "id": "C12",
+      "label": "Small clear commits, Draft PR, never self-merge",
+      "verbose": [
+        "small clear commits",
+        "draft pull request",
+        "never merge their own|Nobody should ever merge their own"
+      ],
+      "brief": ["small clear commits", "draft pr", "never self-merge"]
+    },
+    {
+      "id": "C13",
+      "label": "Non-goals: no renames/redesign/extras/new libraries",
+      "verbose": ["do not rename", "do not add new libraries", "clever extra features"],
+      "brief": ["no new libraries", "do not: rename, redesign or add extras"]
+    }
+  ],
+  "noise": [
+    "1987",
+    "grandfather",
+    "begging",
+    "\\bcake\\b",
+    "picnic",
+    "family to support",
+    "northwind",
+    "legacy",
+    "blessings",
+    "last hope",
+    "\\btea\\b",
+    "magazine"
+  ]
+}

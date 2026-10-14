@@ -1,0 +1,51 @@
+[
+  {
+    "id": "M0",
+    "name": "baseline (original code, no bug)",
+    "weak": true,
+    "comp": true,
+    "e2e": true
+  },
+  {
+    "id": "M1",
+    "name": "validation removed (bad email is submitted)",
+    "weak": true,
+    "comp": false,
+    "e2e": false
+  },
+  {
+    "id": "M2",
+    "name": "error text no longer red",
+    "weak": true,
+    "comp": false,
+    "e2e": false
+  },
+  {
+    "id": "M3",
+    "name": "HTTP 401 treated as success (res.ok check removed)",
+    "weak": true,
+    "comp": true,
+    "e2e": false
+  },
+  {
+    "id": "M4",
+    "name": "client sends a user id again (?userId=2)",
+    "weak": true,
+    "comp": false,
+    "e2e": true
+  },
+  {
+    "id": "M5",
+    "name": "apiBase ignored (wrong URL wiring)",
+    "weak": true,
+    "comp": true,
+    "e2e": false
+  },
+  {
+    "id": "M6",
+    "name": "Authorization header not sent",
+    "weak": true,
+    "comp": false,
+    "e2e": false
+  }
+]

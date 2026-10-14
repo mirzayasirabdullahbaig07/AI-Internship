@@ -1,0 +1,12 @@
+ID   Planted bug                                          Weak tests  Component   Browser    
+---  ---------------------------------------------------  ----------  ----------  ---------- 
+M0   baseline (original code, no bug)                     pass        pass        pass       
+M1   validation removed (bad email is submitted)          missed      CAUGHT      CAUGHT     
+M2   error text no longer red                             missed      CAUGHT      CAUGHT     
+M3   HTTP 401 treated as success (res.ok check removed)   missed      missed      CAUGHT     
+M4   client sends a user id again (?userId=2)             missed      CAUGHT      missed     
+M5   apiBase ignored (wrong URL wiring)                   missed      missed      CAUGHT     
+M6   Authorization header not sent                        missed      CAUGHT      CAUGHT     
+
+Bugs caught (of 6): weak tests 0, component test 4, browser journey 5, component+browser together 6
+Baseline (original code) passes every layer: yes

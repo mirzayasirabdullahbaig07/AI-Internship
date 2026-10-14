@@ -1,0 +1,38 @@
+$ npx jest day-15-security-privacy --verbose   (secure code)
+PASS day-15-security-privacy/tests/security.test.js (5.112 s)
+  Notes API security (target: secure)
+    A01 Broken Access Control
+      ✓ a user cannot delete someone else's note (and the note survives) (444 ms)
+      ✓ an owner can delete their own note (183 ms)
+      ✓ an admin can delete any note (228 ms)
+      ✓ owner_id in a POST body is ignored: the caller always owns what they create (186 ms)
+      ✓ listing notes returns only the caller's notes (181 ms)
+    A02 Security Misconfiguration
+      ✓ secure response headers are set and CORS is not wide open (199 ms)
+    A04 Cryptographic Failures
+      ✓ passwords are stored with a salted slow hash, not MD5 (146 ms)
+      ✓ session tokens are random (two logins differ) and long (253 ms)
+    A05 Injection
+      ✓ SQL injection in the search term does not expose other users' notes (173 ms)
+      ✓ a malformed search term does not produce a database error (171 ms)
+      ✓ SQL injection in login (UNION SELECT) cannot log an attacker in as the admin (195 ms)
+    A06 Insecure Design (limits)
+      ✓ title and body have length limits (194 ms)
+      ✓ a user cannot create unlimited notes (271 ms)
+      ✓ an oversized request body is refused (413) (168 ms)
+    A07 Authentication Failures
+      ✓ unknown user and wrong password are indistinguishable (no user enumeration) (206 ms)
+      ✓ login is rate limited: 5 failures lock the account (429), even for the right password (347 ms)
+      ✓ a forged token (base64 of id:email) is rejected (123 ms)
+      ✓ sessions expire (333 ms)
+    A09 Security Logging & Alerting + privacy
+      ✓ logs never contain passwords or tokens (171 ms)
+      ✓ failed logins and denied actions produce security events (211 ms)
+      ✓ responses expose no more personal data than needed (no emails, no hashes) (169 ms)
+    A10 Mishandling of Exceptional Conditions
+      ✓ invalid JSON gives a clean 400 with no stack trace (140 ms)
+Test Suites: 1 passed, 1 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        5.403 s
+Ran all test suites matching day-15.

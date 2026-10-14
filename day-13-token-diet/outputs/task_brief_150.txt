@@ -1,0 +1,16 @@
+Goal: Build a responsive Leave Request form.
+Scope: new files only. Change nothing existing. No new libraries.
+Data: typed local fake data. No real employee information.
+Validation (inline message beside the field):
+- end date not before start date
+- start date not in the past
+- reason required, 10-500 characters
+- maximum 30 days per request
+- reject overlap with approved leave
+States: loading, error with retry, empty, success confirmation.
+Accessibility: fully keyboard operable, visible focus, labelled fields, errors announced to screen readers.
+Layout: usable from 320px to desktop, no horizontal scroll.
+Tests: one component test, one real-browser end-to-end flow.
+Delivery: small clear commits, Draft PR, never self-merge.
+Do not: rename, redesign or add extras.
+Return: a plan first, then a diff.

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 13 - Prompt diet</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.45rem;
+      }
+      .sub {
+        margin: 0 0 16px;
+        color: #5a6280;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        gap: 18px;
+        max-width: 1300px;
+      }
+      .panel {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgb(27 34 64/10%);
+        overflow: hidden;
+      }
+      .panel h2 {
+        margin: 0;
+        padding: 12px 16px;
+        font-size: 1rem;
+      }
+      .before h2 {
+        background: #fde8e8;
+        color: #9b1c1c;
+      }
+      .after h2 {
+        background: #e3f6ea;
+        color: #14633a;
+      }
+      .stats {
+        display: flex;
+        gap: 10px;
+        padding: 10px 16px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        background: #e8ebf7;
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      pre {
+        margin: 0;
+        padding: 12px 16px;
+        white-space: pre-wrap;
+        font:
+          12px/1.5 ui-monospace,
+          Consolas,
+          monospace;
+        max-height: 560px;
+        overflow: hidden;
+      }
+      .before pre {
+        color: #555;
+        position: relative;
+      }
+      .after pre {
+        background: #1e222e;
+        color: #dde1ee;
+        max-height: none;
+      }
+      .result {
+        max-width: 1300px;
+        margin-top: 16px;
+        padding: 14px 18px;
+        background: #fff;
+        border-radius: 12px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Day 13 - Keeping AI token use low</h1>
+    <p class="sub">
+      A verbose manager message (left) cut to a sterile task brief (right) without losing
+      any acceptance criterion.
+    </p>
+    <div class="grid">
+      <section class="panel before">
+        <h2>Before: verbose prompt</h2>
+        <div class="stats" id="s1"></div>
+        <pre id="t1">
+Subject: URGENT!!! Please read this whole message carefully, it is extremely important to me and to the company
+
+Hi there, I hope you are doing well. Before I explain what I need, I want to give you a little background about us, because I really believe that context matters, and I feel you should understand who we are.
+
+Our company, Northwind Peak Logistics, was founded back in 1987 by my grandfather, Tobias, in a tiny garage behind a bakery in a small town. He started with exactly one second-hand delivery van, a paper ledger, and a lot of stubborn optimism. In the early days he personally delivered every parcel, and customers would often invite him in for tea. By 1994 we had three vans. By 1999 we had a proper warehouse, although the roof leaked every winter, and we all remember the famous flood of 2001 when the entire team stayed overnight stacking boxes on tables. My father took over in 2008 and modernised everything, he even bought our first computer, a beige monster that made a noise like a jet engine. I joined the business in 2015 and since then we have grown to four hundred and twelve employees across six offices. We have won the regional Best Small Employer award twice, and in 2019 we were featured in a magazine, which my mother still keeps framed in the hallway.
+
+I tell you all of this because culture is everything to us. We are a family. We have a yearly picnic, a winter quiz night, and a tradition where every new hire gets a handwritten welcome card. Our values are kindness, reliability and humour, in that order. Honestly, some days I think the humour is the only reason people stay, ha ha.
+
+Now, the problem. Right now, when someone wants to take leave, they send an email to their manager, or sometimes they message them on a chat app, or occasionally they just tell them in the corridor. Last spring this caused an absolute disaster. Two people from the same team both went on holiday for the same week and nobody noticed until the Monday morning when the dispatch desk was completely empty. I cannot even describe the stress. My phone did not stop ringing. I did not sleep for two nights. Our biggest customer, who has been with us since 1996, nearly walked away. I am not exaggerating when I say that my whole career, and possibly my father's legacy, depends on getting this fixed properly, so please, please, please do not let me down. I am honestly begging you. I have a family to support and the board is watching me very closely.
+
+I have tried other approaches before, and they were all terrible. First I bought a very expensive software package which nobody could understand. Then my cousin, who is very clever with spreadsheets, made a shared sheet, but people kept overwriting each other and one person accidentally deleted the whole of March. I have lost faith in everything except careful, simple, reliable work, and I have been told that you are exactly the kind of careful engineer who can deliver that.
+
+So here is what I would like you to build. It is a Leave Request form for our staff. I want it to be lovely and easy to use, I want people to smile when they use it, but most importantly I want it to work correctly every single time. Please read the following requirements very closely, because I have been burned before.
+
+The form must work nicely on a phone as well as on a desktop computer, because many of our drivers only have their phones and they often fill things in while sitting in the van during a break. It must look correct on a very small phone screen, and it must also look good on a big monitor in the head office, and the layout must not break or scroll sideways on a small screen.
+
+Please do not use any real employee information anywhere. We have strict privacy rules, my lawyer is very particular about this, and I do not want a single real name, address or number inside the code. Use made up sample data that is stored locally and described with proper types, so that everybody can see exactly what shape the information has.
+
+The form must check what people type before it accepts it. For example, the end date must never be before the start date, the start date must not be in the past, the reason must not be empty and should have a sensible minimum and maximum length, and nobody should be allowed to request more than thirty days at once. If something is wrong, tell the person clearly, in friendly words, next to the field that has the problem. Also please do not allow a request that overlaps with leave that has already been approved, because that is exactly what caused the disaster last spring.
+
+I also want every possible situation to be handled properly, because people get very upset when screens just go blank. While the information is loading there must be a clear loading indication. If something goes wrong there must be a helpful error message and a way to try again. If there are no requests yet, there should be a friendly empty message instead of an empty box. And when a request is submitted successfully, there must be a clear success confirmation.
+
+Accessibility is very important to us because we have several colleagues who cannot use a mouse. The entire form must be fully usable with the keyboard alone, with a sensible tab order, visible focus, and proper labels, and errors should be announced to people using screen readers.
+
+On the technical side, I would like exactly one focused automated test for the form component itself, and exactly one automated test that clicks through the whole journey in a real browser, from filling in the form to seeing the confirmation. Please keep the history of your changes tidy and sensible, with small clear commits, and finish by opening a draft pull request that somebody else will review before anything is merged. Nobody should ever merge their own work, that is a rule my father made and I intend to keep it.
+
+Please do not change anything else in the project. Do not redesign the other screens, do not rename things that already exist, do not add new libraries unless you absolutely have to, and do not wander off adding clever extra features that nobody asked for. I know engineers sometimes get excited and add things, and I admire the enthusiasm, but this time I only want exactly what is described here.
+
+Thank you so, so much. I will be thinking of you and I will bring cake to the office when this is done. You are honestly my last hope. Warmest regards and many blessings to you and your family, and please remember that kindness is our first value.
+
+Tobias Junior, Managing Director, Northwind Peak Logistics (est. 1987)
+</pre>
+      </section>
+      <section class="panel after">
+        <h2>After: 150-word task brief</h2>
+        <div class="stats" id="s2"></div>
+        <pre id="t2">
+Goal: Build a responsive Leave Request form.
+Scope: new files only. Change nothing existing. No new libraries.
+Data: typed local fake data. No real employee information.
+Validation (inline message beside the field):
+- end date not before start date
+- start date not in the past
+- reason required, 10-500 characters
+- maximum 30 days per request
+- reject overlap with approved leave
+States: loading, error with retry, empty, success confirmation.
+Accessibility: fully keyboard operable, visible focus, labelled fields, errors announced to screen readers.
+Layout: usable from 320px to desktop, no horizontal scroll.
+Tests: one component test, one real-browser end-to-end flow.
+Delivery: small clear commits, Draft PR, never self-merge.
+Do not: rename, redesign or add extras.
+Return: a plan first, then a diff.
+</pre>
+      </section>
+    </div>
+    <div class="result" id="result"></div>
+    <script>
+      const words = (t) => {
+        t = t.trim();
+        return t ? t.split(/\s+/).length : 0;
+      };
+      const est = (t) => Math.ceil(t.length / 4);
+      const a = document.getElementById("t1").textContent,
+        b = document.getElementById("t2").textContent;
+      const chips = (id, t) =>
+        (document.getElementById(id).innerHTML =
+          '<span class="chip">' +
+          words(t) +
+          ' words</span><span class="chip">~' +
+          est(t) +
+          ' est. tokens</span><span class="chip">' +
+          t.length +
+          " chars</span>");
+      chips("s1", a);
+      chips("s2", b);
+      document.getElementById("result").textContent =
+        "Words cut by " +
+        (100 - (words(b) / words(a)) * 100).toFixed(1) +
+        "%  |  est. tokens cut by " +
+        (100 - (est(b) / est(a)) * 100).toFixed(1) +
+        "%  |  all 13 acceptance criteria kept (checked by Jest)";
+      document.body.dataset.ready = "true";
+    </script>
+  </body>
+</html>

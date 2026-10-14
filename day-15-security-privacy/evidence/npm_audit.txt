@@ -1,0 +1,16 @@
+$ npm audit --omit=dev   (runtime dependencies only)
+found 0 vulnerabilities
+exit code: 0
+
+$ npm audit   (all dependencies, summary)
+sprintf-js  *
+Severity: moderate
+sprintf-js vulnerable to denial of service through unbounded precision specifiers - https://github.com/advisories/GHSA-hp3w-g68c-fv3c
+fix available via `npm audit fix --force`
+Will install babel-jest@25.0.0, which is a breaking change
+19 moderate severity vulnerabilities
+To address all issues (including breaking changes), run:
+
+$ node -e dependencies in package.json
+dependencies: {}
+devDependencies: 20 packages

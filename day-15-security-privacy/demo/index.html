@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Day 15 - Hiding the Delete button is not authorization</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      header,
+      .ui,
+      .grid {
+        max-width: 1320px;
+        margin: 0 auto 16px;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.45rem;
+      }
+      .sub {
+        margin: 0 0 12px;
+        color: #5a6280;
+      }
+      .ui {
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 4px 16px rgb(27 34 64 / 10%);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .note {
+        border: 1px solid #c9ccd8;
+        border-radius: 10px;
+        padding: 10px 14px;
+        min-width: 280px;
+      }
+      .note b {
+        display: block;
+      }
+      .ghost {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 4px 12px;
+        border: 2px dashed #b9bfd6;
+        border-radius: 8px;
+        color: #8a90a8;
+        font-size: 0.82rem;
+      }
+      code {
+        background: #eef0f8;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 0.82rem;
+      }
+      button {
+        font: inherit;
+        font-weight: 700;
+        padding: 8px 18px;
+        border: 0;
+        border-radius: 8px;
+        background: #2f4bd6;
+        color: #fff;
+        cursor: pointer;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 20px;
+      }
+      .panel {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgb(27 34 64 / 10%);
+      }
+      .panel h2 {
+        margin: 0;
+        padding: 12px 16px;
+        font-size: 1.02rem;
+      }
+      .insecure h2 {
+        background: #fde8e8;
+        color: #9b1c1c;
+      }
+      .secure h2 {
+        background: #e3f6ea;
+        color: #14633a;
+      }
+      .row {
+        padding: 10px 16px;
+        border-top: 1px solid #e3e6f0;
+      }
+      .row h3 {
+        margin: 0 0 4px;
+        font-size: 0.9rem;
+      }
+      .req {
+        font:
+          11.5px ui-monospace,
+          Consolas,
+          monospace;
+        color: #5a6280;
+        word-break: break-all;
+        margin-bottom: 5px;
+      }
+      .badges {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 5px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-size: 0.76rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: #e3e6f0;
+      }
+      .badge.bad {
+        background: #d92d20;
+        color: #fff;
+      }
+      .badge.good {
+        background: #1a8f4c;
+        color: #fff;
+      }
+      pre {
+        margin: 0;
+        padding: 7px 9px;
+        background: #1e222e;
+        color: #dde1ee;
+        border-radius: 6px;
+        font:
+          11.5px/1.45 ui-monospace,
+          Consolas,
+          monospace;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .idle {
+        color: #8a90a8;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Day 15 - Hiding the Delete button is not authorization</h1>
+      <p class="sub">
+        An attacker signed in as <b>Ayesha Khan</b> (a normal user) targets
+        <b>Mirza Yasir Abdullah Baig's</b> private note, using only direct HTTP requests.
+      </p>
+    </header>
+    <section class="ui">
+      <div class="note">
+        <b>Private: interview prep</b>
+        <span>owner: Mirza Yasir Abdullah Baig (id 1)</span><br />
+        <span class="ghost" id="ghost"
+          >[Delete] hidden by the UI: note.owner &ne; me</span
+        >
+      </div>
+      <div>
+        UI code: <code>if (note.owner === me) showDeleteButton()</code><br />The button is
+        hidden for Ayesha. Now watch what the <b>servers</b> do.
+      </div>
+      <button id="run" type="button">Run all attacks</button>
+    </section>
+    <main class="grid">
+      <section class="panel insecure">
+        <h2>Insecure API (lab/insecure)</h2>
+        <div id="insecure"></div>
+      </section>
+      <section class="panel secure">
+        <h2>Secure API (src)</h2>
+        <div id="secure"></div>
+      </section>
+    </main>
+    <script>
+      const ATTACKS = [
+        {
+          id: "delete",
+          title: "1. Direct DELETE of Yasir's note (UI button hidden)",
+          req: "DELETE /api/notes/1  (Ayesha's token)",
+        },
+        {
+          id: "forged",
+          title: "2. Forged token: base64('1:' + Yasir's email)",
+          req: "GET /api/notes  (Authorization: Bearer base64(id:email))",
+        },
+        {
+          id: "sqli",
+          title: "3. SQL injection in search: ' OR 1=1 --",
+          req: "GET /api/notes?search=%27%20OR%201%3D1%20--  (as Ayesha)",
+        },
+        {
+          id: "brute",
+          title: "4. Brute force: 6 wrong passwords for Ayesha",
+          req: "POST /api/login x6  -> statuses",
+        },
+        {
+          id: "json",
+          title: "5. Invalid JSON body",
+          req: "POST /api/login  body: {not json",
+        },
+      ];
+      const LAB = {
+        yasir: {
+          email: "mirzayasirabdullahbaig07@users.noreply.github.com",
+          password: "lab-pass-yasir-1",
+        },
+        ayesha: { email: "ayesha.khan@example.test", password: "lab-pass-ayesha-2" },
+      };
+      const call = async (side, method, path, { token, body, raw } = {}) => {
+        const headers = {};
+        if (token) headers.Authorization = "Bearer " + token;
+        let payload;
+        if (raw !== undefined) payload = raw;
+        else if (body !== undefined) payload = JSON.stringify(body);
+        if (payload !== undefined) headers["Content-Type"] = "application/json";
+        const res = await fetch("/" + side + path, { method, headers, body: payload });
+        const text = await res.text();
+        let json = null;
+        try {
+          json = JSON.parse(text);
+        } catch {}
+        return { status: res.status, text, json };
+      };
+      const login = async (side, u) =>
+        (await call(side, "POST", "/api/login", { body: u })).json?.token;
+      const short = (t, n = 150) => (t.length > n ? t.slice(0, n) + " ..." : t);
+
+      function paint(side) {
+        document.getElementById(side).innerHTML = ATTACKS.map(
+          (a) => `
+          <div class="row"><h3>${a.title}</h3><div class="req">${a.req}</div>
+          <div class="badges" id="${side}-${a.id}-b"></div><pre id="${side}-${a.id}-p" class="idle">not run yet</pre></div>`,
+        ).join("");
+      }
+      function show(side, id, statuses, exploited, detail) {
+        document.getElementById(`${side}-${id}-b`).innerHTML =
+          `<span class="badge">${statuses}</span><span class="badge ${exploited ? "bad" : "good"}">${exploited ? "EXPLOITED" : "BLOCKED"}</span>`;
+        const pre = document.getElementById(`${side}-${id}-p`);
+        pre.className = "";
+        pre.textContent = detail;
+      }
+
+      async function runSide(side) {
+        const ayesha = await login(side, LAB.ayesha);
+        // 1 direct delete
+        const del = await call(side, "DELETE", "/api/notes/1", { token: ayesha });
+        const yasirToken = await login(side, LAB.yasir);
+        const yasirNotes =
+          (await call(side, "GET", "/api/notes", { token: yasirToken })).json || [];
+        const survives = yasirNotes.some((n) => n.id === 1);
+        show(
+          side,
+          "delete",
+          "HTTP " + del.status,
+          !survives,
+          `${short(del.text)}\nYasir's note #1 ${survives ? "STILL EXISTS" : "was DELETED"}`,
+        );
+        // 2 forged token
+        const forged = btoa("1:" + LAB.yasir.email);
+        const f = await call(side, "GET", "/api/notes", { token: forged });
+        show(
+          side,
+          "forged",
+          "HTTP " + f.status,
+          f.status === 200,
+          f.status === 200
+            ? `accepted: ${Array.isArray(f.json) ? f.json.length : "?"} notes returned`
+            : short(f.text),
+        );
+        // 3 sqli
+        const sq = await call(
+          side,
+          "GET",
+          "/api/notes?search=" + encodeURIComponent("' OR 1=1 --"),
+          { token: ayesha },
+        );
+        const titles = Array.isArray(sq.json) ? sq.json.map((n) => n.title) : [];
+        show(
+          side,
+          "sqli",
+          "HTTP " + sq.status,
+          titles.includes("Release checklist") ||
+            titles.includes("Private: interview prep") ||
+            titles.includes("Private: interview prep"),
+          `titles returned: ${JSON.stringify(titles)}`,
+        );
+        // 4 brute force
+        const codes = [];
+        for (let i = 0; i < 6; i++)
+          codes.push(
+            (
+              await call(side, "POST", "/api/login", {
+                body: { email: LAB.ayesha.email, password: "wrong" + i },
+              })
+            ).status,
+          );
+        show(
+          side,
+          "brute",
+          codes.join(", "),
+          !codes.includes(429),
+          codes.includes(429)
+            ? "locked out with 429 Too Many Requests"
+            : "no lockout: unlimited guesses allowed",
+        );
+        // 5 invalid json
+        const bj = await call(side, "POST", "/api/login", { raw: "{not json" });
+        show(
+          side,
+          "json",
+          "HTTP " + bj.status,
+          bj.status === 500 || /stack/.test(bj.text),
+          short(bj.text, 170),
+        );
+      }
+      document.getElementById("run").addEventListener("click", async () => {
+        await fetch("/reset", { method: "POST" });
+        paint("insecure");
+        paint("secure");
+        await runSide("insecure");
+        await runSide("secure");
+        document.body.dataset.done = "true";
+      });
+      paint("insecure");
+      paint("secure");
+    </script>
+  </body>
+</html>

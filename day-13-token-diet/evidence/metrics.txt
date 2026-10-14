@@ -1,0 +1,5 @@
+Verbose prompt : 1177 words, 6583 chars, ~1646 est. tokens, 12/12 noise markers
+Task brief     : 123 words, 809 chars, ~203 est. tokens, 0/12 noise markers
+Reduction      : words -89.5%, est. tokens -87.7%
+Criteria kept  : 13/13
+(Token numbers are a chars/4 ESTIMATE, not a real tokenizer.)

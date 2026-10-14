@@ -1,0 +1,10 @@
+[insecure] 1. Direct DELETE of Yasir's note (UI button hidden) => EXPLOITED
+[insecure] 2. Forged token: base64('1:' + Yasir's email) => EXPLOITED
+[insecure] 3. SQL injection in search: ' OR 1=1 -- => EXPLOITED
+[insecure] 4. Brute force: 6 wrong passwords for Ayesha => EXPLOITED
+[insecure] 5. Invalid JSON body => EXPLOITED
+[secure] 1. Direct DELETE of Yasir's note (UI button hidden) => BLOCKED
+[secure] 2. Forged token: base64('1:' + Yasir's email) => BLOCKED
+[secure] 3. SQL injection in search: ' OR 1=1 -- => BLOCKED
+[secure] 4. Brute force: 6 wrong passwords for Ayesha => BLOCKED
+[secure] 5. Invalid JSON body => BLOCKED
