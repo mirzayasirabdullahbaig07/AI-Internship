@@ -1,0 +1,8 @@
+Demo run on commit d089e84
+PASS   16.8s  Prettier, TypeScript and every test  [260]
+PASS    0.2s  Safety audit (secrets, ignores, CODEOWNERS)  [8 pass, 0 fail, 0 warn, 4 manual (not verifiable locally)]
+PASS    0.2s  Build the capstone demo bundle
+PASS    1.7s  Keyboard-only browser flow (the ONE flow test)
+PASS    6.3s  axe-core on 7 UI states (+ negative control)  [0]
+PASS    2.2s  Responsive check 320/390/768/1280px
+RESULT: all steps passed

@@ -10,7 +10,14 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run typecheck && npm test"
+    "verify": "npm run format:check && npm run typecheck && npm test",
+    "test:vulnerable": "cross-env TARGET=vulnerable jest day-12-review-agents/tests/security.test.js",
+    "demo:day12": "npm run demo:build && node day-12-review-agents/src/server.js",
+    "demo:build": "node day-12-review-agents/tools/build_demo.mjs",
+    "test:insecure": "cross-env TARGET=insecure jest day-15-security-privacy/tests/security.test.js",
+    "demo:day15": "node day-15-security-privacy/src/server.js",
+    "safety": "node day-18-working-safely/src/safetyCli.js",
+    "hooks:install": "node day-18-working-safely/tools/install_hooks.js"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -37,7 +44,10 @@
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "axe-core": "^4.14.0",
     "babel-jest": "^30.5.2",
+    "cross-env": "^10.1.0",
+    "esbuild": "^0.28.2",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "prettier": "^3.9.9",

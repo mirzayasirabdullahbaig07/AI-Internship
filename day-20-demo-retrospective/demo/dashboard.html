@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI-Assisted Software Development Internship - dashboard</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f1f3f9;
+        color: #1b2240;
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 1.5rem;
+      }
+      .sub {
+        margin: 0 0 16px;
+        color: #4a5270;
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        max-width: 1240px;
+        margin-bottom: 16px;
+      }
+      .tile {
+        background: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow: 0 4px 16px rgb(27 34 64/10%);
+      }
+      .tile b {
+        display: block;
+        font-size: 1.6rem;
+      }
+      .tile span {
+        color: #4a5270;
+        font-size: 0.82rem;
+      }
+      .tile.warn b {
+        color: #9b1c1c;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 1240px;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgb(27 34 64/10%);
+        font-size: 0.88rem;
+      }
+      th,
+      td {
+        padding: 7px 12px;
+        text-align: left;
+        border-top: 1px solid #eef0f8;
+      }
+      th {
+        background: #1f2d6b;
+        color: #fff;
+        border: 0;
+      }
+      td.n {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .ok {
+        color: #14633a;
+        font-weight: 700;
+      }
+      .fail {
+        color: #9b1c1c;
+        font-weight: 800;
+      }
+      .dim {
+        color: #8a90a8;
+      }
+      .note {
+        max-width: 1240px;
+        margin-top: 14px;
+        padding: 12px 16px;
+        background: #fff7e6;
+        border: 1px solid #f0c36d;
+        border-radius: 10px;
+        font-size: 0.88rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>AI-Assisted Software Development Internship - Days 1-20</h1>
+    <p class="sub">
+      Mirza Yasir Abdullah Baig, AI Engineer -
+      github.com/mirzayasirabdullahbaig07/AI-Internship - numbers come from a real run on
+      commit d6aed32
+    </p>
+    <div class="tiles">
+      <div class="tile"><b>260</b><span>tests passing</span></div>
+      <div class="tile"><b class="">0</b><span>tests failing</span></div>
+      <div class="tile"><b>22</b><span>test suites</span></div>
+      <div class="tile"><b>81</b><span>commits on main</span></div>
+      <div class="tile"><b>36</b><span>day branches</span></div>
+      <div class="tile warn"><b>0</b><span>pull requests opened</span></div>
+      <div class="tile warn"><b>0</b><span>hosted CI runs</span></div>
+    </div>
+    <table>
+      <tr>
+        <th>Day</th>
+        <th>Topic</th>
+        <th class="n">Tests</th>
+        <th class="n">Commits</th>
+        <th class="n">Screenshots</th>
+        <th>Other evidence</th>
+      </tr>
+      <tr>
+        <td>01</td>
+        <td>Software delivery basics: static profile card</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">1</td>
+        <td class="n">4</td>
+        <td>Playwright: overflow + hover checks</td>
+      </tr>
+      <tr>
+        <td>02</td>
+        <td>Responsive sign-in form (CSS Grid)</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">2</td>
+        <td class="n">7</td>
+        <td>Playwright: 4 widths, Tab order, Enter</td>
+      </tr>
+      <tr>
+        <td>03</td>
+        <td>Typed task list, four UI states</td>
+        <td class="n"><span class="ok">6</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>04</td>
+        <td>API consumption with retry</td>
+        <td class="n"><span class="ok">7</span></td>
+        <td class="n">2</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>05</td>
+        <td>Password strength meter + critical review</td>
+        <td class="n"><span class="ok">11</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>06</td>
+        <td>Local Git discipline</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">2</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>real one-file, one-commit lab</td>
+      </tr>
+      <tr>
+        <td>07</td>
+        <td>GitHub and Draft PR</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>PR text only</td>
+      </tr>
+      <tr>
+        <td>08</td>
+        <td>PR review discipline</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>failing test, then fix</td>
+      </tr>
+      <tr>
+        <td>09</td>
+        <td>Local-first CI test matrix</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>docs + verify run</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>CI failures and honest reporting</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>5 classified sample logs</td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td>Task agent: LoginForm email validation</td>
+        <td class="n"><span class="ok">1</span></td>
+        <td class="n">1</td>
+        <td class="n"><span class="dim">-</span></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td>Review agent: audit an unsafe PR</td>
+        <td class="n"><span class="ok">34</span></td>
+        <td class="n">3</td>
+        <td class="n">7</td>
+        <td>Playwright demo, 6 exploits proven</td>
+      </tr>
+      <tr>
+        <td>13</td>
+        <td>Keeping token use low</td>
+        <td class="n"><span class="ok">8</span></td>
+        <td class="n">1</td>
+        <td class="n">1</td>
+        <td>browser counts match Node</td>
+      </tr>
+      <tr>
+        <td>14</td>
+        <td>Tests that matter</td>
+        <td class="n"><span class="ok">6</span></td>
+        <td class="n">1</td>
+        <td class="n">4</td>
+        <td>keyboard journey + 6-bug mutation check</td>
+      </tr>
+      <tr>
+        <td>15</td>
+        <td>Security and privacy (OWASP 2025)</td>
+        <td class="n"><span class="ok">22</span></td>
+        <td class="n">1</td>
+        <td class="n">2</td>
+        <td>5 attacks vs 2 APIs, npm audit</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>AI-COO operating inputs</td>
+        <td class="n"><span class="ok">23</span></td>
+        <td class="n">1</td>
+        <td class="n">4</td>
+        <td>validator demo, 4 presets</td>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>AI-COO task lifecycle</td>
+        <td class="n"><span class="ok">49</span></td>
+        <td class="n">1</td>
+        <td class="n">4</td>
+        <td>illegal-move demo</td>
+      </tr>
+      <tr>
+        <td>18</td>
+        <td>Working safely with agents</td>
+        <td class="n"><span class="ok">44</span></td>
+        <td class="n">3</td>
+        <td class="n">2</td>
+        <td>repo audit, secret scanner, handoff</td>
+      </tr>
+      <tr>
+        <td>19</td>
+        <td>Capstone: Leave Request form</td>
+        <td class="n"><span class="ok">44</span></td>
+        <td class="n">15</td>
+        <td class="n">15</td>
+        <td>keyboard flow, axe 7 states, 12 mutants</td>
+      </tr>
+      <tr>
+        <td>20</td>
+        <td>Demo, review and retrospective</td>
+        <td class="n"><span class="ok">5</span></td>
+        <td class="n">2</td>
+        <td class="n">1</td>
+        <td>this dashboard, 2 review bugs fixed</td>
+      </tr>
+    </table>
+    <div class="note">
+      <b>Honest status:</b> no pull request has been opened and hosted CI has not been run
+      (both need the owner's GitHub account); no human reviewer is named yet; GitHub
+      branch protection and secret scanning must be enabled by the owner. A dash means
+      that day has no automated test or screenshot, not that evidence is hidden. Days 1-10
+      pre-date the "(day-NN)" commit-scope convention for some commits.
+    </div>
+    <script>
+      document.body.dataset.ready = "true";
+    </script>
+  </body>
+</html>

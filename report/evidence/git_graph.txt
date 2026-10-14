@@ -1,0 +1,47 @@
+*   e2b84b1 (HEAD -> main) Merge docs/day-10-ci-failures
+|\  
+| * 35413ea (docs/day-10-ci-failures) docs(day-10): classify sample CI logs and add honest report
+|/  
+*   00f1a62 Merge docs/day-09-local-test-matrix
+|\  
+| * e748053 (docs/day-09-local-test-matrix) style: format repository with prettier
+| * b486cec docs(day-09): add local test matrix for UI change vs DB migration
+|/  
+*   98cfd14 Merge fix/day-08-review-findings
+|\  
+| * b7738cd (fix/day-08-review-findings) fix(day-04): do not retry when a 200 response has an invalid JSON body
+|/  
+*   4928630 Merge feat/day-07-draft-pr
+|\  
+| * 8a14f8a (feat/day-07-draft-pr) docs(day-07): add draft PR instructions and body
+|/  
+*   c386f0d Merge feat/day-06-git-local
+|\  
+| * 9dbba42 (feat/day-06-git-local) docs(day-06): document disciplined git workflow
+| * 32e7aea docs(day-06): add practice note for local git workflow
+|/  
+*   4b494e1 Merge feat/day-05-password-strength
+|\  
+| * 7ca6776 (feat/day-05-password-strength) feat(day-05): add password strength meter with edge-case tests and review note
+|/  
+*   4195aa9 Merge feat/day-04-api-retry
+|\  
+| * d645e85 (feat/day-04-api-retry) feat(day-04): add fetchWithRetry with backoff and local mock-server tests
+|/  
+*   c3ffc9c Merge feat/day-03-typed-tasks
+|\  
+| * 9e7dfb0 (feat/day-03-typed-tasks) feat(day-03): add typed task list with four explicit UI states
+|/  
+*   4dbbba3 Merge test/day-02-browser-checks
+|\  
+| * ca1d00e (test/day-02-browser-checks) test(day-02): add Playwright overflow and keyboard checks with evidence
+|/  
+*   0b7b4ce Merge feat/day-02-responsive-signin
+|\  
+| * ed611d8 (feat/day-02-responsive-signin) feat(day-02): add responsive sign-in form with CSS grid
+|/  
+*   2fe120f Merge feat/day-01-profile-card
+|\  
+| * 5240656 (feat/day-01-profile-card) feat(day-01): add static profile card with hover and focus states
+|/  
+* d9cb474 chore: initial project scaffold and tooling

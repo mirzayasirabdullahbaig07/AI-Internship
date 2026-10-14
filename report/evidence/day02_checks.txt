@@ -1,0 +1,10 @@
+[Day 1] width=320px horizontal overflow=0px -> PASS
+[Day 1] width=1280px horizontal overflow=0px -> PASS
+[Day 1] hover state: rgb(47, 75, 214) -> rgb(31, 52, 168) -> PASS
+[Day 2] width=320px horizontal overflow=0px -> PASS
+[Day 2] width=390px horizontal overflow=0px -> PASS
+[Day 2] width=768px horizontal overflow=0px -> PASS
+[Day 2] width=1280px horizontal overflow=0px -> PASS
+[Day 2] Tab order: ['email', 'password', 'BUTTON'] -> PASS
+[Day 2] Enter on focused button submits form -> PASS
+[Day 2] every input has a <label for> -> PASS

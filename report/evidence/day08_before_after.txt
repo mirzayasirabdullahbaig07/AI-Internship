@@ -1,0 +1,21 @@
+=== BEFORE FIX ===
+  ✓ recovers after 2 simulated network drops (3rd attempt succeeds) (47 ms)
+  ✓ sends the Authorization bearer header (16 ms)
+  ✓ retries 5xx then succeeds (9 ms)
+  ✓ 401 is NOT retried and surfaces 'Auth required' (11 ms)
+  ✓ gives up after retries are exhausted (1 + 2 attempts) on persistent 500 (27 ms)
+  ✓ gives up on persistent network drops (35 ms)
+  ✕ 200 with an invalid JSON body is NOT retried (retrying cannot fix a bad body) (26 ms)
+    - Expected  - 3
+    + Received  + 1
+      74 |   expect(hits).toBe(1);
+Tests:       1 failed, 6 passed, 7 total
+=== AFTER FIX ===
+  ✓ recovers after 2 simulated network drops (3rd attempt succeeds) (50 ms)
+  ✓ sends the Authorization bearer header (12 ms)
+  ✓ retries 5xx then succeeds (10 ms)
+  ✓ 401 is NOT retried and surfaces 'Auth required' (7 ms)
+  ✓ gives up after retries are exhausted (1 + 2 attempts) on persistent 500 (25 ms)
+  ✓ gives up on persistent network drops (40 ms)
+  ✓ 200 with an invalid JSON body is NOT retried (retrying cannot fix a bad body) (7 ms)
+Tests:       7 passed, 7 total

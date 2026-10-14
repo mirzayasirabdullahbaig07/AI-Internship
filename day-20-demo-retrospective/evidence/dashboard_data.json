@@ -1,0 +1,198 @@
+{
+  "sha": "d6aed32",
+  "totals": {
+    "passed": 260,
+    "failed": 0,
+    "suites": 22
+  },
+  "other": {
+    "passed": 0,
+    "failed": 0,
+    "suites": 0
+  },
+  "totalCommits": 81,
+  "branches": 36,
+  "rows": [
+    {
+      "day": "01",
+      "topic": "Software delivery basics: static profile card",
+      "evidence": "Playwright: overflow + hover checks",
+      "tests": 0,
+      "failed": 0,
+      "commits": 1,
+      "shots": 4
+    },
+    {
+      "day": "02",
+      "topic": "Responsive sign-in form (CSS Grid)",
+      "evidence": "Playwright: 4 widths, Tab order, Enter",
+      "tests": 0,
+      "failed": 0,
+      "commits": 2,
+      "shots": 7
+    },
+    {
+      "day": "03",
+      "topic": "Typed task list, four UI states",
+      "evidence": "-",
+      "tests": 6,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "04",
+      "topic": "API consumption with retry",
+      "evidence": "-",
+      "tests": 7,
+      "failed": 0,
+      "commits": 2,
+      "shots": 0
+    },
+    {
+      "day": "05",
+      "topic": "Password strength meter + critical review",
+      "evidence": "-",
+      "tests": 11,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "06",
+      "topic": "Local Git discipline",
+      "evidence": "real one-file, one-commit lab",
+      "tests": 0,
+      "failed": 0,
+      "commits": 2,
+      "shots": 0
+    },
+    {
+      "day": "07",
+      "topic": "GitHub and Draft PR",
+      "evidence": "PR text only",
+      "tests": 0,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "08",
+      "topic": "PR review discipline",
+      "evidence": "failing test, then fix",
+      "tests": 0,
+      "failed": 0,
+      "commits": 0,
+      "shots": 0
+    },
+    {
+      "day": "09",
+      "topic": "Local-first CI test matrix",
+      "evidence": "docs + verify run",
+      "tests": 0,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "10",
+      "topic": "CI failures and honest reporting",
+      "evidence": "5 classified sample logs",
+      "tests": 0,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "11",
+      "topic": "Task agent: LoginForm email validation",
+      "evidence": "-",
+      "tests": 1,
+      "failed": 0,
+      "commits": 1,
+      "shots": 0
+    },
+    {
+      "day": "12",
+      "topic": "Review agent: audit an unsafe PR",
+      "evidence": "Playwright demo, 6 exploits proven",
+      "tests": 34,
+      "failed": 0,
+      "commits": 3,
+      "shots": 7
+    },
+    {
+      "day": "13",
+      "topic": "Keeping token use low",
+      "evidence": "browser counts match Node",
+      "tests": 8,
+      "failed": 0,
+      "commits": 1,
+      "shots": 1
+    },
+    {
+      "day": "14",
+      "topic": "Tests that matter",
+      "evidence": "keyboard journey + 6-bug mutation check",
+      "tests": 6,
+      "failed": 0,
+      "commits": 1,
+      "shots": 4
+    },
+    {
+      "day": "15",
+      "topic": "Security and privacy (OWASP 2025)",
+      "evidence": "5 attacks vs 2 APIs, npm audit",
+      "tests": 22,
+      "failed": 0,
+      "commits": 1,
+      "shots": 2
+    },
+    {
+      "day": "16",
+      "topic": "AI-COO operating inputs",
+      "evidence": "validator demo, 4 presets",
+      "tests": 23,
+      "failed": 0,
+      "commits": 1,
+      "shots": 4
+    },
+    {
+      "day": "17",
+      "topic": "AI-COO task lifecycle",
+      "evidence": "illegal-move demo",
+      "tests": 49,
+      "failed": 0,
+      "commits": 1,
+      "shots": 4
+    },
+    {
+      "day": "18",
+      "topic": "Working safely with agents",
+      "evidence": "repo audit, secret scanner, handoff",
+      "tests": 44,
+      "failed": 0,
+      "commits": 3,
+      "shots": 2
+    },
+    {
+      "day": "19",
+      "topic": "Capstone: Leave Request form",
+      "evidence": "keyboard flow, axe 7 states, 12 mutants",
+      "tests": 44,
+      "failed": 0,
+      "commits": 15,
+      "shots": 15
+    },
+    {
+      "day": "20",
+      "topic": "Demo, review and retrospective",
+      "evidence": "this dashboard, 2 review bugs fixed",
+      "tests": 5,
+      "failed": 0,
+      "commits": 2,
+      "shots": 1
+    }
+  ],
+  "generated": "from a real jest --json run, git log and the file tree"
+}
